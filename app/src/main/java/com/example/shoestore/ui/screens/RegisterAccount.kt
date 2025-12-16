@@ -1,8 +1,9 @@
 package com.example.shoestore.ui.screens
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,11 +21,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shoestore.R
@@ -279,7 +280,6 @@ fun RegisterAccountScreen(
                 // Здесь будет логика регистрации
                 isLoading = true
                 // Имитация запроса на сервер
-                // В реальном приложении здесь будет вызов API
             },
             modifier = Modifier
                 .fillMaxWidth()
