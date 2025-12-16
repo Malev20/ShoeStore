@@ -1,119 +1,106 @@
 package com.example.shoestore.viewmodels
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import java.util.regex.Pattern
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class RegisterViewModel : ViewModel() {
-    // Данные формы
-    var name by mutableStateOf("")
-    var email by mutableStateOf("")
-    var password by mutableStateOf("")
 
-    // Состояния UI
-    var agreeToTerms by mutableStateOf(false)
-    var passwordVisible by mutableStateOf(false)
-    var isLoading by mutableStateOf(false)
+    // UI состояния
+    var name = mutableStateOf("")
+    var email = mutableStateOf("")
+    var password = mutableStateOf("")
+    var agree = mutableStateOf(false)
+    var passwordVisible = mutableStateOf(false)
 
     // Ошибки валидации
-    var nameError by mutableStateOf("")
-    var emailError by mutableStateOf("")
-    var passwordError by mutableStateOf("")
+    var nameError = mutableStateOf("")
+    var emailError = mutableStateOf("")
+    var passwordError = mutableStateOf("")
 
-    // Переключение видимости пароля
-    fun togglePasswordVisibility() {
-        passwordVisible = !passwordVisible
-    }
+    // Состояние загрузки
+    var isLoading = mutableStateOf(false)
 
-    // Валидация email
-    fun validateEmail(): Boolean {
-        val pattern = "^[a-z0-9]+@[a-z0-9]+\\.[a-z]{3,}$"
-        return if (email.isEmpty()) {
-            emailError = "Введите email"
-            false
-        } else if (!Pattern.matches(pattern, email)) {
-            emailError = "Неверный формат email. Пример: name@domain.ru"
-            false
-        } else {
-            emailError = ""
-            true
+    // Валидация имени
+    fun validateName() {
+        nameError.value = when {
+            name.value.isEmpty() -> "Имя не может быть пустым"
+            name.value.length < 2 -> "Имя должно быть не менее 2 символов"
+            !name.value.matches(Regex("^[a-zA-Zа-яА-ЯёЁ\\s-]+$")) -> "Имя содержит недопустимые символы"
+            else -> ""
         }
     }
 
-    // Валидация имени
-    fun validateName(): Boolean {
-        return if (name.isEmpty()) {
-            nameError = "Введите ваше имя"
-            false
-        } else {
-            nameError = ""
-            true
+    // Валидация email
+    fun validateEmail() {
+        val pattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$"
+        emailError.value = when {
+            email.value.isEmpty() -> "Email не может быть пустым"
+            !email.value.matches(pattern.toRegex()) -> "Неверный формат email"
+            else -> ""
         }
     }
 
     // Валидация пароля
-    fun validatePassword(): Boolean {
-        return if (password.isEmpty()) {
-            passwordError = "Введите пароль"
-            false
-        } else if (password.length < 6) {
-            passwordError = "Пароль должен быть не менее 6 символов"
-            false
-        } else {
-            passwordError = ""
-            true
+    fun validatePassword() {
+        passwordError.value = when {
+            password.value.isEmpty() -> "Пароль не может быть пустым"
+            password.value.length < 6 -> "Пароль должен быть не менее 6 символов"
+            !password.value.matches(Regex(".*[A-Z].*")) -> "Пароль должен содержать хотя бы одну заглавную букву"
+            !password.value.matches(Regex(".*\\d.*")) -> "Пароль должен содержать хотя бы одну цифру"
+            else -> ""
         }
     }
 
-    // Основная функция регистрации
-    fun register(onSuccess: () -> Unit, onError: (String) -> Unit) {
-        // Валидация всех полей
-        val isNameValid = validateName()
-        val isEmailValid = validateEmail()
-        val isPasswordValid = validatePassword()
+    // Переключение видимости пароля
+    fun togglePasswordVisibility() {
+        passwordVisible.value = !passwordVisible.value
+    }
 
-        if (!isNameValid || !isEmailValid || !isPasswordValid) {
+    // Проверка всех полей
+    fun validateAll(): Boolean {
+        validateName()
+        validateEmail()
+        validatePassword()
+        return nameError.value.isEmpty() &&
+                emailError.value.isEmpty() &&
+                passwordError.value.isEmpty() &&
+                agree.value
+    }
+
+    // Симуляция регистрации
+    suspend fun register(
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        if (!validateAll()) {
             onError("Пожалуйста, исправьте ошибки в форме")
             return
         }
 
-        if (!agreeToTerms) {
-            onError("Для регистрации необходимо согласие на обработку персональных данных")
-            return
-        }
+        isLoading.value = true
+        try {
+            // Имитация сетевого запроса
+            delay(2000)
 
-        // Имитация регистрации через API
-        viewModelScope.launch {
-            isLoading = true
+            // Здесь будет реальный API вызов
+            // val response = api.register(name.value, email.value, password.value)
 
-            try {
-                // Имитация сетевого запроса (2 секунды)
-                delay(2000)
+            // Проверка успешности (имитация)
+            val isSuccess = true // Замени на реальную проверку
 
-                // Здесь в реальном приложении будет вызов API
-                // val response = apiService.register(name, email, password)
-
-                // Предположим успешную регистрацию
+            if (isSuccess) {
                 onSuccess()
-
-            } catch (e: Exception) {
-                // Обработка ошибок сети
-                val errorMessage = when {
-                    e.message?.contains("network", ignoreCase = true) == true ->
-                        "Нет соединения с интернетом"
-                    e.message?.contains("timeout", ignoreCase = true) == true ->
-                        "Время ожидания истекло"
-                    else -> "Ошибка регистрации: ${e.message}"
-                }
-                onError(errorMessage)
-            } finally {
-                isLoading = false
+            } else {
+                onError("Ошибка регистрации. Попробуйте позже")
             }
+        } catch (e: Exception) {
+            onError("Ошибка сети: ${e.message}")
+        } finally {
+            isLoading.value = false
         }
     }
 }

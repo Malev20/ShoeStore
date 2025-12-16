@@ -1,4 +1,5 @@
 package com.example.shoestore.ui.screens
+
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.Image
@@ -7,9 +8,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -43,16 +41,15 @@ fun RegisterAccountScreen(
     var isLoading by remember { mutableStateOf(false) }
     var emailError by remember { mutableStateOf("") }
 
-    // Цвета
-    val activeButtonColor = Accent // Активная кнопка (синий)
-    val inactiveButtonColor = Color(0xFF2B6B8B) // Неактивная кнопка (#2B6B8B)
-    val linkColor = Color(0xFF6A6A6A) // Цвет ссылки (#6A6A6A)
+    // Цвета кнопки согласно ТЗ
+    val inactiveButtonColor = Color(0xFF2B6B8B) // #2B6B8B - неактивная
+    val activeButtonColor = Color(0xFF48B2E7)   // #48B2E7 - активная
 
     // Функция проверки email
     fun checkEmail(email: String): String {
-        val pattern = "^[a-z0-9]+@[a-z0-9]+\\.[a-z]{3,}$"
+        val pattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$"
         return if (email.isNotEmpty() && !email.matches(pattern.toRegex())) {
-            "Неверный формат email. Пример: name@domain.ru"
+            "Неверный формат email"
         } else {
             ""
         }
@@ -156,19 +153,18 @@ fun RegisterAccountScreen(
             shape = RoundedCornerShape(16.dp)
         )
 
-        // Ошибка email (если есть)
         if (emailError.isNotEmpty()) {
             Text(
                 text = emailError,
                 color = Color.Red,
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 modifier = Modifier.padding(top = 4.dp)
             )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Поле "Пароль"
+        // Поле "Пароль" с иконкой глаза
         Text(
             text = "Пароль",
             color = Text,
@@ -195,16 +191,19 @@ fun RegisterAccountScreen(
             },
             trailingIcon = {
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(
-                        imageVector = if (passwordVisible)
-                            Icons.Filled.Visibility
-                        else
-                            Icons.Filled.VisibilityOff,
+                    Image(
+                        painter = painterResource(
+                            id = if (passwordVisible)
+                                R.drawable.eye_open
+                            else
+                                R.drawable.eye_close
+                        ),
                         contentDescription = if (passwordVisible)
                             "Скрыть пароль"
                         else
                             "Показать пароль",
-                        tint = SubTextDark
+                        modifier = Modifier.size(24.dp),
+                        colorFilter = ColorFilter.tint(SubTextDark)
                     )
                 }
             },
@@ -220,12 +219,12 @@ fun RegisterAccountScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Чекбокс согласия С ИКОНКОЙ и подчеркиванием
+        // Чекбокс согласия с иконкой policy_check.xml
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            // Кастомный чекбокс с иконкой
+            // Кастомный чекбокс
             Box(
                 modifier = Modifier
                     .size(24.dp)
@@ -241,7 +240,7 @@ fun RegisterAccountScreen(
                     .clickable { agree = !agree }
             ) {
                 if (agree) {
-                    // Показываем иконку галочки
+                    // Иконка policy_check.xml
                     Image(
                         painter = painterResource(id = R.drawable.policy_check),
                         contentDescription = "Согласие принято",
@@ -255,30 +254,21 @@ fun RegisterAccountScreen(
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            // Текст согласия с подчеркиванием
+            // Текст согласия
             Text(
-                buildAnnotatedString {
-                    withStyle(
-                        style = SpanStyle(
-                            color = SubTextDark,
-                            fontSize = 16.sp,
-                            textDecoration = TextDecoration.Underline // Подчеркивание
-                        )
-                    ) {
-                        append("Даю согласие на обработку\nперсональных данных")
-                    }
-                }
+                text = "Даю согласие на обработку персональных данных",
+                color = SubTextDark,
+                fontSize = 16.sp
             )
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Кнопка "Зарегистрироваться" с кастомным цветом неактивного состояния
+        // Кнопка "Зарегистрироваться" с изменением цвета согласно ТЗ
         Button(
             onClick = {
-                // Здесь будет логика регистрации
                 isLoading = true
-                // Имитация запроса на сервер
+                // Здесь будет логика регистрации
                 // В реальном приложении здесь будет вызов API
             },
             modifier = Modifier
@@ -286,7 +276,7 @@ fun RegisterAccountScreen(
                 .height(56.dp),
             enabled = agree && !isLoading,
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (agree && !isLoading) activeButtonColor else inactiveButtonColor,
+                containerColor = if (agree) activeButtonColor else inactiveButtonColor,
                 disabledContainerColor = inactiveButtonColor
             ),
             shape = RoundedCornerShape(16.dp)
@@ -311,23 +301,26 @@ fun RegisterAccountScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Текст "Есть аккаунт? Войти" (не кнопка, а кликабельный текст) цвета #6A6A6A
+        // Текст "Есть аккаунт? Войти" - черный цвет, только "Войти" подчеркнуто
         Text(
             buildAnnotatedString {
+                // "Есть аккаунт? " - обычный черный текст
                 withStyle(
                     style = SpanStyle(
-                        color = linkColor, // #6A6A6A
+                        color = Color.Black,  // Черный цвет
                         fontSize = 16.sp,
-                        textDecoration = TextDecoration.None
+                        textDecoration = TextDecoration.None,
+                        fontWeight = FontWeight.Normal
                     )
                 ) {
                     append("Есть аккаунт? ")
                 }
+                // "Войти" - подчеркнутый черный текст
                 withStyle(
                     style = SpanStyle(
-                        color = linkColor, // #6A6A6A
+                        color = Color.Black,  // Черный цвет
                         fontSize = 16.sp,
-                        textDecoration = TextDecoration.Underline, // Подчеркивание
+                        textDecoration = TextDecoration.Underline,
                         fontWeight = FontWeight.Bold
                     )
                 ) {
@@ -341,4 +334,12 @@ fun RegisterAccountScreen(
             textAlign = TextAlign.Center
         )
     }
+}
+
+@androidx.compose.ui.tooling.preview.Preview(showBackground = true)
+@Composable
+fun RegisterAccountScreenPreview() {
+    RegisterAccountScreen(
+        onNavigateToSignIn = {}
+    )
 }
