@@ -9,7 +9,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.shoestore.ui.screens.SignInScreen
+import com.example.shoestore.ui.screens.ForgotPasswordScreen
+// import com.example.shoestore.ui.screens.SignInScreen
 // import com.example.shoestore.ui.screens.RegisterAccountScreen
 import com.example.shoestore.ui.theme.ShoeStoreTheme
 
@@ -22,9 +23,24 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    // 🔹 ВРЕМЕННО запускаем экран восстановления пароля
+                    ForgotPasswordScreen(
+                        onNavigateBack = {
+                            println("Возврат назад")
+                        }
+                    )
 
-                    // 🔹 ВРЕМЕННО запускаем экран входа
-                    SignInScreen()
+                    /*
+                    🔹 Экран входа (вернёшь позже)
+                    SignInScreen(
+                        onNavigateToRegister = {
+                            println("Переход на регистрацию")
+                        },
+                        onForgotPassword = {
+                            println("Переход на восстановление пароля")
+                        }
+                    )
+                    */
 
                     /*
                     🔹 Экран регистрации (вернёшь позже)
@@ -42,13 +58,26 @@ class MainActivity : ComponentActivity() {
 
 @Preview(showBackground = true)
 @Composable
-fun SignInPreview() {
+fun ForgotPasswordPreview() {
     ShoeStoreTheme {
-        SignInScreen()
+        ForgotPasswordScreen(
+            onNavigateBack = {}
+        )
     }
 }
 
 /*
+@Preview(showBackground = true)
+@Composable
+fun SignInPreview() {
+    ShoeStoreTheme {
+        SignInScreen(
+            onNavigateToRegister = {},
+            onForgotPassword = {}
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun RegisterPreview() {

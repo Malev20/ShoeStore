@@ -8,17 +8,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.shoestore.R
+import com.example.shoestore.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ForgotPasswordScreen(
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit = {}
 ) {
     var email by remember { mutableStateOf("") }
 
@@ -31,9 +30,9 @@ fun ForgotPasswordScreen(
     ) {
         Spacer(modifier = Modifier.height(40.dp))
 
-        // Заголовок
+        // Заголовок - ХАРДКОД как в RegisterAccountScreen
         Text(
-            text = stringResource(R.string.twentyone), // "Забыл пароль"
+            text = "Забыл пароль", // Хардкод вместо stringResource(R.string.twentyone)
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
             color = Text
@@ -41,8 +40,9 @@ fun ForgotPasswordScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Подзаголовок - ХАРДКОД
         Text(
-            text = stringResource(R.string.twentytwo), // "Введите свою учетную запись для сброса"
+            text = "Введите Свою Учетную Запись\n Для Сброса", // Хардкод вместо stringResource(R.string.twentytwo)
             fontSize = 16.sp,
             color = SubTextDark,
             textAlign = TextAlign.Center,
@@ -51,9 +51,9 @@ fun ForgotPasswordScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Email
+        // Email - ХАРДКОД
         Text(
-            text = stringResource(R.string.nine), // "Email"
+            text = "Email", // Хардкод вместо stringResource(R.string.nine)
             fontSize = 16.sp,
             color = Text,
             modifier = Modifier
@@ -86,7 +86,7 @@ fun ForgotPasswordScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Кнопка Отправить
+        // Кнопка - ХАРДКОД
         Button(
             onClick = {
                 // TODO: Логика отправки email для сброса пароля
@@ -100,7 +100,7 @@ fun ForgotPasswordScreen(
             shape = RoundedCornerShape(16.dp)
         ) {
             Text(
-                text = stringResource(R.string.twentythree), // "Отправить"
+                text = "Отправить", // Хардкод вместо stringResource(R.string.twentythree)
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
