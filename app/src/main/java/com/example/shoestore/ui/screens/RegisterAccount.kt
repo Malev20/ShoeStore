@@ -309,7 +309,7 @@ fun RegisterAccountScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(133.dp))
 
         // Текст "Есть аккаунт? Войти" (не кнопка, а кликабельный текст) цвета #6A6A6A
         Text(
