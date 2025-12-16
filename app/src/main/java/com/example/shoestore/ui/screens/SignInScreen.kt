@@ -15,12 +15,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// ===== Цвета (можно потом вынести в Theme) =====
-val Accent = Color(0xFF5B67CA)
+// ===== Цвета =====
+val Accent = Color(0xFF48B2E7)
 val Background = Color(0xFFF8F9FF)
 val Block = Color.White
 val Text = Color(0xFF333333)
@@ -147,7 +146,6 @@ fun SignInScreen() {
             text = "Восстановить",
             fontSize = 14.sp,
             color = SubTextDark,
-            textDecoration = TextDecoration.Underline,
             modifier = Modifier
                 .align(Alignment.End)
         )
@@ -173,14 +171,13 @@ fun SignInScreen() {
             )
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(209.dp)) // 209 dp от кнопки
 
         // ===== Нижний текст =====
         Text(
             text = "Вы впервые? Создать",
             fontSize = 16.sp,
             color = SubTextDark,
-            modifier = Modifier.padding(bottom = 24.dp),
             textAlign = TextAlign.Center
         )
     }
