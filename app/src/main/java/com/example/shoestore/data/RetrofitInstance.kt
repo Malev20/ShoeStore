@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitInstance {
-    private const val SUPABASE_URL = "https://yixipuxyofpafnvbaprs.supabase.co"
+    private const val SUPABASE_URL = "https://ityekgxdzzcxaqnltahl.supabase.co"
 
     private val client = OkHttpClient.Builder()
         .connectTimeout(30, TimeUnit.SECONDS)

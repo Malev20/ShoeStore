@@ -2,8 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.hilt.android)
-    kotlin("kapt")
 }
 
 android {
@@ -12,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.shoestore"
-        minSdk = 26
+        minSdk = 33
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -91,12 +89,7 @@ dependencies {
 
     // Hilt
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)  // Используем kapt без объявления плагина
     implementation(libs.hilt.navigation.compose)
     implementation("androidx.navigation:navigation-compose:2.7.7")
 }
 
-// Конфигурация для Hilt
-kapt {
-    correctErrorTypes = true
-}
