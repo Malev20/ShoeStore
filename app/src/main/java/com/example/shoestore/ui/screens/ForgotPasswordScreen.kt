@@ -30,9 +30,9 @@ fun ForgotPasswordScreen(
     ) {
         Spacer(modifier = Modifier.height(40.dp))
 
-        // Заголовок - ХАРДКОД как в RegisterAccountScreen
+        // Заголовок
         Text(
-            text = "Забыл пароль", // Хардкод вместо stringResource(R.string.twentyone)
+            text = "Забыл пароль",
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
             color = Text
@@ -40,9 +40,9 @@ fun ForgotPasswordScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Подзаголовок - ХАРДКОД
+        // Подзаголовок
         Text(
-            text = "Введите Свою Учетную Запись\n Для Сброса", // Хардкод вместо stringResource(R.string.twentytwo)
+            text = "Введите Свою Учетную Запись\n Для Сброса",
             fontSize = 16.sp,
             color = SubTextDark,
             textAlign = TextAlign.Center,
@@ -51,9 +51,9 @@ fun ForgotPasswordScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Email - ХАРДКОД
+        // Email
         Text(
-            text = "Email", // Хардкод вместо stringResource(R.string.nine)
+            text = "Email",
             fontSize = 16.sp,
             color = Text,
             modifier = Modifier
@@ -86,7 +86,6 @@ fun ForgotPasswordScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Кнопка - ХАРДКОД
         Button(
             onClick = {
                 // TODO: Логика отправки email для сброса пароля

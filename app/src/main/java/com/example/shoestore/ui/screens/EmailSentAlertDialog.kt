@@ -36,7 +36,6 @@ fun EmailSentAlertDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // Синий кружок 44x44 с иконкой
                 Box(
                     modifier = Modifier
                         .size(44.dp)

@@ -18,7 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// ===== Цвета =====
+//  Цвета
 val Accent = Color(0xFF48B2E7)
 val Background = Color(0xFFF8F9FF)
 val Block = Color.White
@@ -43,7 +43,7 @@ fun SignInScreen() {
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        // ===== Заголовок =====
+        // Заголовок
         Text(
             text = "Привет!",
             fontSize = 28.sp,
@@ -61,7 +61,7 @@ fun SignInScreen() {
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // ===== Email =====
+        // Email
         Text(
             text = "Email",
             fontSize = 16.sp,
@@ -93,7 +93,7 @@ fun SignInScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // ===== Пароль =====
+        // Пароль
         Text(
             text = "Пароль",
             fontSize = 16.sp,
@@ -141,7 +141,7 @@ fun SignInScreen() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // ===== Восстановить =====
+        //  Восстановить
         Text(
             text = "Восстановить",
             fontSize = 14.sp,
@@ -152,7 +152,7 @@ fun SignInScreen() {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // ===== Кнопка Войти =====
+        // Кнопка Войти
         Button(
             onClick = {},
             modifier = Modifier
@@ -173,7 +173,7 @@ fun SignInScreen() {
 
         Spacer(modifier = Modifier.height(209.dp)) // 209 dp от кнопки
 
-        // ===== Нижний текст =====
+        // Нижний текст
         Text(
             text = "Вы впервые? Создать",
             fontSize = 16.sp,

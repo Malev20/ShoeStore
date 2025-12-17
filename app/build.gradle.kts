@@ -3,8 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt.android)
-    // НЕ добавляйте kotlin-kapt здесь - он уже включен в kotlin-android
-    kotlin("kapt")  // Вот так нужно использовать, без alias
+    kotlin("kapt")
 }
 
 android {

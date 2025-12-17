@@ -9,9 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.shoestore.ui.screens.ForgotPasswordScreen
-// import com.example.shoestore.ui.screens.SignInScreen
-// import com.example.shoestore.ui.screens.RegisterAccountScreen
+import com.example.shoestore.ui.screens.OtpVerificationScreen
 import com.example.shoestore.ui.theme.ShoeStoreTheme
 
 class MainActivity : ComponentActivity() {
@@ -23,33 +21,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    // 🔹 ВРЕМЕННО запускаем экран восстановления пароля
-                    ForgotPasswordScreen(
-                        onNavigateBack = {
-                            println("Возврат назад")
+                    OtpVerificationScreen(
+                        onNavigateToNewPassword = {
+                            println("Переход к созданию нового пароля")
                         }
                     )
-
-                    /*
-                    🔹 Экран входа (вернёшь позже)
-                    SignInScreen(
-                        onNavigateToRegister = {
-                            println("Переход на регистрацию")
-                        },
-                        onForgotPassword = {
-                            println("Переход на восстановление пароля")
-                        }
-                    )
-                    */
-
-                    /*
-                    🔹 Экран регистрации (вернёшь позже)
-                    RegisterAccountScreen(
-                        onNavigateToSignIn = {
-                            println("Переход на экран входа")
-                        }
-                    )
-                    */
                 }
             }
         }
@@ -58,33 +34,10 @@ class MainActivity : ComponentActivity() {
 
 @Preview(showBackground = true)
 @Composable
-fun ForgotPasswordPreview() {
+fun OtpVerificationPreview() {
     ShoeStoreTheme {
-        ForgotPasswordScreen(
-            onNavigateBack = {}
+        OtpVerificationScreen(
+            onNavigateToNewPassword = { }
         )
     }
 }
-
-/*
-@Preview(showBackground = true)
-@Composable
-fun SignInPreview() {
-    ShoeStoreTheme {
-        SignInScreen(
-            onNavigateToRegister = {},
-            onForgotPassword = {}
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun RegisterPreview() {
-    ShoeStoreTheme {
-        RegisterAccountScreen(
-            onNavigateToSignIn = {}
-        )
-    }
-}
-*/

@@ -157,7 +157,7 @@ fun RegisterAccountScreen(
             shape = RoundedCornerShape(16.dp)
         )
 
-        // Ошибка email (если есть)
+        // Ошибка email
         if (emailError.isNotEmpty()) {
             Text(
                 text = emailError,
@@ -221,12 +221,10 @@ fun RegisterAccountScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Чекбокс согласия С ИКОНКОЙ и подчеркиванием
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            // Кастомный чекбокс с иконкой
             Box(
                 modifier = Modifier
                     .size(24.dp)
@@ -242,7 +240,6 @@ fun RegisterAccountScreen(
                     .clickable { agree = !agree }
             ) {
                 if (agree) {
-                    // Показываем иконку галочки
                     Image(
                         painter = painterResource(id = R.drawable.policy_check),
                         contentDescription = "Согласие принято",
@@ -279,7 +276,7 @@ fun RegisterAccountScreen(
             onClick = {
                 // Здесь будет логика регистрации
                 isLoading = true
-                // Имитация запроса на сервер
+
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -311,7 +308,7 @@ fun RegisterAccountScreen(
 
         Spacer(modifier = Modifier.height(133.dp))
 
-        // Текст "Есть аккаунт? Войти" (не кнопка, а кликабельный текст) цвета #6A6A6A
+        // Текст "Есть аккаунт? Войти"
         Text(
             buildAnnotatedString {
                 withStyle(

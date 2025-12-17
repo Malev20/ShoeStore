@@ -7,7 +7,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitInstance {
-    // ВАЖНО: Вставьте свой Supabase URL
     private const val SUPABASE_URL = "https://yixipuxyofpafnvbaprs.supabase.co"
 
     private val client = OkHttpClient.Builder()
