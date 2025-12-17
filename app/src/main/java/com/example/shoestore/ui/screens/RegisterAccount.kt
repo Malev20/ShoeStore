@@ -69,7 +69,7 @@ fun RegisterAccountScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Заголовок "Регистрация" по центру
+        // "Регистрация"
         Text(
             text = "Регистрация",
             fontSize = 28.sp,
@@ -79,7 +79,6 @@ fun RegisterAccountScreen(
             textAlign = TextAlign.Center
         )
 
-        // Подзаголовок "Заполните Свои Данные" по центру
         Text(
             text = "Заполните Свои Данные",
             fontSize = 16.sp,
@@ -90,7 +89,6 @@ fun RegisterAccountScreen(
             textAlign = TextAlign.Center
         )
 
-        // Поле "Ваше имя"
         Text(
             text = "Ваше имя",
             color = Text,
@@ -123,7 +121,6 @@ fun RegisterAccountScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Поле "Email"
         Text(
             text = "Email",
             color = Text,
@@ -169,7 +166,6 @@ fun RegisterAccountScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Поле "Пароль"
         Text(
             text = "Пароль",
             color = Text,
@@ -253,7 +249,6 @@ fun RegisterAccountScreen(
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            // Текст согласия с подчеркиванием
             Text(
                 buildAnnotatedString {
                     withStyle(
@@ -271,10 +266,8 @@ fun RegisterAccountScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Кнопка "Зарегистрироваться" с кастомным цветом неактивного состояния
         Button(
             onClick = {
-                // Здесь будет логика регистрации
                 isLoading = true
 
             },
@@ -308,7 +301,6 @@ fun RegisterAccountScreen(
 
         Spacer(modifier = Modifier.height(133.dp))
 
-        // Текст "Есть аккаунт? Войти"
         Text(
             buildAnnotatedString {
                 withStyle(

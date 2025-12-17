@@ -9,7 +9,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.shoestore.ui.screens.OtpVerificationScreen
+import com.example.shoestore.ui.screens.CreateNewPasswordScreen
+import com.example.shoestore.ui.screens.CreateNewPasswordScreen
 import com.example.shoestore.ui.theme.ShoeStoreTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,9 +22,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    OtpVerificationScreen(
-                        onNavigateToNewPassword = {
-                            println("Переход к созданию нового пароля")
+                    CreateNewPasswordScreen(
+                        onNavigateToNextScreen = {
+                            println("Пароль сохранен, переход дальше")
                         }
                     )
                 }
@@ -34,10 +35,10 @@ class MainActivity : ComponentActivity() {
 
 @Preview(showBackground = true)
 @Composable
-fun OtpVerificationPreview() {
+fun SetNewPasswordPreview() {
     ShoeStoreTheme {
-        OtpVerificationScreen(
-            onNavigateToNewPassword = { }
+        CreateNewPasswordScreen (
+            onNavigateToNextScreen = { }
         )
     }
 }
