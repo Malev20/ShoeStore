@@ -12,33 +12,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.shoestore.ui.theme.*
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.shoestore.ui.theme.*
+import com.example.shoestore.ui.viewmodel.ForgotPasswordViewModel
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ForgotPasswordScreen(
     onNavigateBack: () -> Unit = {},
     onEmailSent: (email: String) -> Unit
 ) {
-    val viewModel: com.example.shoestore.ui.viewmodel.ForgotPasswordViewModel = viewModel()
+    val viewModel: ForgotPasswordViewModel = viewModel()
 
-    // Показываем диалог при успешной отправке
-    if (viewModel.showEmailSentDialog.value) {
-        EmailSentAlertDialog(
-            onDismissRequest = {
-                viewModel.closeEmailSentDialog()
-                onEmailSent(viewModel.email)
-            }
-        )
-    }
+    // Используем collectAsState
+    val isLoading by viewModel.isLoading.collectAsState()
+    val showEmailSentDialog by viewModel.showEmailSentDialog.collectAsState()
+    val forgotPasswordState by viewModel.forgotPasswordState.collectAsState()
 
     // Наблюдаем за состоянием отправки
-    LaunchedEffect(viewModel.forgotPasswordState) {
-        when (val state = viewModel.forgotPasswordState.value) {
-            is com.example.shoestore.ui.viewmodel.ForgotPasswordState.Success -> {
-                // Диалог показывается через showEmailSentDialog
-            }
-            else -> {}
+    LaunchedEffect(forgotPasswordState) {
+        if (forgotPasswordState is com.example.shoestore.ui.viewmodel.ForgotPasswordState.Success) {
+            onEmailSent(viewModel.email)
+            viewModel.resetState()
         }
     }
 
@@ -87,14 +82,15 @@ fun ForgotPasswordScreen(
             onValueChange = { viewModel.email = it },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp),
-            placeholder = {
-                Text(
-                    text = "xyz@gmail.com",
-                    color = SubTextDark
-                )
-            },
+                .defaultMinSize(minHeight = 56.dp), // ✅ ВМЕСТО height
             singleLine = true,
+            placeholder = {
+                Text("xyz@gmail.com", color = SubTextDark)
+            },
+            textStyle = LocalTextStyle.current.copy(
+                color = Text,
+                fontSize = 16.sp
+            ),
             isError = viewModel.emailError != null,
             supportingText = {
                 viewModel.emailError?.let { error ->
@@ -102,14 +98,17 @@ fun ForgotPasswordScreen(
                 }
             },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color.Transparent,
-                unfocusedBorderColor = Color.Transparent,
+                focusedBorderColor = Accent,
+                unfocusedBorderColor = Color(0xFFE0E0E0),
                 focusedContainerColor = Block,
                 unfocusedContainerColor = Block,
-                cursorColor = Accent
+                cursorColor = Accent,
+                focusedTextColor = Text,
+                unfocusedTextColor = Text
             ),
-            shape = RoundedCornerShape(16.dp)
+            shape = RoundedCornerShape(12.dp)
         )
+
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -125,7 +124,7 @@ fun ForgotPasswordScreen(
             ),
             shape = RoundedCornerShape(16.dp)
         ) {
-            if (viewModel.isLoading.value) {
+            if (isLoading) {
                 CircularProgressIndicator(
                     color = Color.White,
                     strokeWidth = 2.dp,

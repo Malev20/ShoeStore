@@ -1,5 +1,5 @@
 package com.example.shoestore.ui.screens
-import androidx.lifecycle.viewmodel.compose.viewModel
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,11 +22,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview // <-- Добавьте эту строку
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.shoestore.R
 import com.example.shoestore.ui.theme.*
+import com.example.shoestore.ui.viewmodel.CreateNewPasswordViewModel
+import com.example.shoestore.ui.viewmodel.CreatePasswordState // Добавьте этот импорт
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,7 +36,11 @@ fun CreateNewPasswordScreen(
     authToken: String,
     onNavigateToSignIn: () -> Unit
 ) {
-    val viewModel: com.example.shoestore.ui.viewmodel.CreateNewPasswordViewModel = viewModel()
+    val viewModel: CreateNewPasswordViewModel = viewModel()
+
+    // Используем collectAsState для StateFlow
+    val isLoading by viewModel.isLoading.collectAsState()
+    val createPasswordState by viewModel.createPasswordState.collectAsState()
 
     // Устанавливаем токен
     LaunchedEffect(authToken) {
@@ -42,13 +48,10 @@ fun CreateNewPasswordScreen(
     }
 
     // Наблюдаем за состоянием изменения пароля
-    LaunchedEffect(viewModel.createPasswordState) {
-        when (val state = viewModel.createPasswordState.value) {
-            is com.example.shoestore.ui.viewmodel.CreatePasswordState.Success -> {
-                onNavigateToSignIn()
-                viewModel.resetState()
-            }
-            else -> {}
+    LaunchedEffect(createPasswordState) {
+        if (createPasswordState is CreatePasswordState.Success) {
+            onNavigateToSignIn()
+            viewModel.resetState()
         }
     }
 
@@ -57,7 +60,8 @@ fun CreateNewPasswordScreen(
             .fillMaxSize()
             .background(Background)
             .padding(20.dp)
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -206,15 +210,15 @@ fun CreateNewPasswordScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
-            enabled = viewModel.validateForm() && !viewModel.isLoading.value,
+            enabled = viewModel.validateForm() && !isLoading,
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (viewModel.validateForm() && !viewModel.isLoading.value)
+                containerColor = if (viewModel.validateForm() && !isLoading)
                     Accent else Color(0xFF2B6B8B),
                 disabledContainerColor = Color(0xFF2B6B8B)
             ),
             shape = RoundedCornerShape(16.dp)
         ) {
-            if (viewModel.isLoading.value) {
+            if (isLoading) {
                 CircularProgressIndicator(
                     color = Color.White,
                     strokeWidth = 2.dp,
@@ -230,6 +234,18 @@ fun CreateNewPasswordScreen(
                     color = Color.White
                 )
             }
+        }
+
+        // Показываем ошибку если есть
+        if (createPasswordState is CreatePasswordState.Error) {
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = (createPasswordState as CreatePasswordState.Error).message,
+                color = Color.Red,
+                fontSize = 14.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
 
         Spacer(modifier = Modifier.weight(1f))

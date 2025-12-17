@@ -1,21 +1,20 @@
 package com.example.shoestore.ui.viewmodel
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shoestore.data.RetrofitInstance
+import com.example.shoestore.data.model.ChangePasswordRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.net.ConnectException
 import java.net.SocketTimeoutException
-import com.example.shoestore.data.model.ChangePasswordRequest
+
 class CreateNewPasswordViewModel : ViewModel() {
-    // Данные формы
+    // Данные формы - используем mutableStateOf для Compose
     var password by mutableStateOf("")
     var confirmPassword by mutableStateOf("")
     var passwordVisible by mutableStateOf(false)
@@ -28,7 +27,7 @@ class CreateNewPasswordViewModel : ViewModel() {
     // Токен для изменения пароля
     private var authToken: String? = null
 
-    // Состояния запросов
+    // Состояния запросов - используем StateFlow
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 

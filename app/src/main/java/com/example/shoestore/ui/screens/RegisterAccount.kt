@@ -28,24 +28,26 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.shoestore.R
 import com.example.shoestore.ui.theme.*
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.shoestore.ui.viewmodel.RegisterViewModel
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterAccountScreen(
     onNavigateToSignIn: () -> Unit,
     onRegisterSuccess: (email: String) -> Unit
 ) {
-    val viewModel: com.example.shoestore.ui.viewmodel.RegisterViewModel = viewModel()
+    val viewModel: RegisterViewModel = viewModel()
 
-    // Наблюдаем за состоянием регистрации
-    LaunchedEffect(viewModel.registerState) {
-        when (val state = viewModel.registerState.value) {
-            is com.example.shoestore.ui.viewmodel.RegisterState.Success -> {
-                onRegisterSuccess(viewModel.email)
-                viewModel.resetState()
-            }
-            else -> {}
+    val isLoading by viewModel.isLoading.collectAsState()
+    val registerState by viewModel.registerState.collectAsState()
+
+    LaunchedEffect(registerState) {
+        if (registerState is com.example.shoestore.ui.viewmodel.RegisterState.Success) {
+            onRegisterSuccess(viewModel.email)
+            viewModel.resetState()
         }
     }
 
@@ -54,11 +56,12 @@ fun RegisterAccountScreen(
             .fillMaxSize()
             .background(Background)
             .padding(20.dp)
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         Spacer(modifier = Modifier.height(24.dp))
 
-        // "Регистрация"
         Text(
             text = "Регистрация",
             fontSize = 28.sp,
@@ -78,30 +81,26 @@ fun RegisterAccountScreen(
             textAlign = TextAlign.Center
         )
 
-        Text(
-            text = "Ваше имя",
-            color = Text,
-            fontSize = 16.sp,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
+        // ===== ИМЯ =====
+        Text("Ваше имя", color = Text, fontSize = 16.sp)
+        Spacer(modifier = Modifier.height(8.dp))
+
         OutlinedTextField(
             value = viewModel.name,
             onValueChange = { viewModel.name = it },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp),
+                .defaultMinSize(minHeight = 56.dp),
             singleLine = true,
-            placeholder = {
-                Text(
-                    text = "XXXXXXXX",
-                    color = SubTextDark,
-                    fontSize = 16.sp
-                )
-            },
+            placeholder = { Text("XXXXXXXX", color = SubTextDark) },
+            textStyle = LocalTextStyle.current.copy(
+                fontSize = 16.sp,
+                color = Text
+            ),
             isError = viewModel.nameError != null,
             supportingText = {
-                viewModel.nameError?.let { error ->
-                    Text(text = error, color = Color.Red)
+                viewModel.nameError?.let {
+                    Text(it, color = Color.Red)
                 }
             },
             colors = TextFieldDefaults.colors(
@@ -114,32 +113,28 @@ fun RegisterAccountScreen(
             shape = RoundedCornerShape(16.dp)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-        Text(
-            text = "Email",
-            color = Text,
-            fontSize = 16.sp,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
+        // ===== EMAIL =====
+        Text("Email", color = Text, fontSize = 16.sp)
+        Spacer(modifier = Modifier.height(8.dp))
+
         OutlinedTextField(
             value = viewModel.email,
             onValueChange = { viewModel.email = it },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp),
+                .defaultMinSize(minHeight = 56.dp),
             singleLine = true,
-            placeholder = {
-                Text(
-                    text = "xyz@gmail.com",
-                    color = SubTextDark,
-                    fontSize = 16.sp
-                )
-            },
+            placeholder = { Text("xyz@gmail.com", color = SubTextDark) },
+            textStyle = LocalTextStyle.current.copy(
+                fontSize = 16.sp,
+                color = Text
+            ),
             isError = viewModel.emailError != null,
             supportingText = {
-                viewModel.emailError?.let { error ->
-                    Text(text = error, color = Color.Red)
+                viewModel.emailError?.let {
+                    Text(it, color = Color.Red)
                 }
             },
             colors = TextFieldDefaults.colors(
@@ -154,49 +149,40 @@ fun RegisterAccountScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(
-            text = "Пароль",
-            color = Text,
-            fontSize = 16.sp,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
+        // ===== ПАРОЛЬ =====
+        Text("Пароль", color = Text, fontSize = 16.sp)
+        Spacer(modifier = Modifier.height(8.dp))
+
         OutlinedTextField(
             value = viewModel.password,
             onValueChange = { viewModel.password = it },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp),
+                .defaultMinSize(minHeight = 56.dp),
             singleLine = true,
-            visualTransformation = if (viewModel.passwordVisible)
-                VisualTransformation.None
-            else
-                PasswordVisualTransformation(),
-            placeholder = {
-                Text(
-                    text = "•••••••",
-                    color = SubTextDark,
-                    fontSize = 20.sp
-                )
-            },
+            visualTransformation =
+                if (viewModel.passwordVisible) VisualTransformation.None
+                else PasswordVisualTransformation(),
+            placeholder = { Text("•••••••", color = SubTextDark, fontSize = 20.sp) },
+            textStyle = LocalTextStyle.current.copy(
+                fontSize = 16.sp,
+                color = Text
+            ),
             trailingIcon = {
                 IconButton(onClick = { viewModel.togglePasswordVisibility() }) {
                     Icon(
                         imageVector = if (viewModel.passwordVisible)
                             Icons.Filled.Visibility
-                        else
-                            Icons.Filled.VisibilityOff,
-                        contentDescription = if (viewModel.passwordVisible)
-                            "Скрыть пароль"
-                        else
-                            "Показать пароль",
+                        else Icons.Filled.VisibilityOff,
+                        contentDescription = null,
                         tint = SubTextDark
                     )
                 }
             },
             isError = viewModel.passwordError != null,
             supportingText = {
-                viewModel.passwordError?.let { error ->
-                    Text(text = error, color = Color.Red)
+                viewModel.passwordError?.let {
+                    Text(it, color = Color.Red)
                 }
             },
             colors = TextFieldDefaults.colors(
@@ -211,6 +197,7 @@ fun RegisterAccountScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // ===== CHECKBOX =====
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
@@ -223,16 +210,16 @@ fun RegisterAccountScreen(
                         RoundedCornerShape(4.dp)
                     )
                     .border(
-                        width = 1.dp,
-                        color = if (viewModel.agree) Accent else SubTextDark,
-                        shape = RoundedCornerShape(4.dp)
+                        1.dp,
+                        if (viewModel.agree) Accent else SubTextDark,
+                        RoundedCornerShape(4.dp)
                     )
                     .clickable { viewModel.agree = !viewModel.agree }
             ) {
                 if (viewModel.agree) {
                     Image(
-                        painter = painterResource(id = R.drawable.policy_check),
-                        contentDescription = "Согласие принято",
+                        painter = painterResource(R.drawable.policy_check),
+                        contentDescription = null,
                         modifier = Modifier
                             .size(16.dp)
                             .align(Alignment.Center),
@@ -244,84 +231,53 @@ fun RegisterAccountScreen(
             Spacer(modifier = Modifier.width(12.dp))
 
             Text(
-                buildAnnotatedString {
-                    withStyle(
-                        style = SpanStyle(
-                            color = SubTextDark,
-                            fontSize = 16.sp,
-                            textDecoration = TextDecoration.Underline
-                        )
-                    ) {
-                        append("Даю согласие на обработку\nперсональных данных")
-                    }
-                }
+                text = "Даю согласие на обработку\nперсональных данных",
+                color = SubTextDark,
+                fontSize = 16.sp,
+                textDecoration = TextDecoration.Underline
             )
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = {
-                viewModel.register()
-            },
+            onClick = { viewModel.register() },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
-            enabled = viewModel.agree && !viewModel.isLoading.value,
+            enabled = viewModel.agree && !isLoading,
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (viewModel.agree && !viewModel.isLoading.value)
-                    Accent else Color(0xFF2B6B8B),
+                containerColor = Accent,
                 disabledContainerColor = Color(0xFF2B6B8B)
             ),
             shape = RoundedCornerShape(16.dp)
         ) {
-            if (viewModel.isLoading.value) {
+            if (isLoading) {
                 CircularProgressIndicator(
                     color = Color.White,
                     strokeWidth = 2.dp,
                     modifier = Modifier.size(20.dp)
                 )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Регистрация...", color = Color.White)
             } else {
                 Text(
-                    text = "Зарегистрироваться",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    "Зарегистрироваться",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(133.dp))
+        Spacer(modifier = Modifier.height(113.dp))
 
         Text(
-            buildAnnotatedString {
-                withStyle(
-                    style = SpanStyle(
-                        color = Color(0xFF6A6A6A),
-                        fontSize = 16.sp,
-                        textDecoration = TextDecoration.None
-                    )
-                ) {
-                    append("Есть аккаунт? ")
-                }
-                withStyle(
-                    style = SpanStyle(
-                        color = Color(0xFF6A6A6A),
-                        fontSize = 16.sp,
-                        textDecoration = TextDecoration.Underline,
-                        fontWeight = FontWeight.Bold
-                    )
-                ) {
-                    append("Войти")
-                }
-            },
+            text = "Есть аккаунт? Войти",
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onNavigateToSignIn() }
-                .align(Alignment.CenterHorizontally),
-            textAlign = TextAlign.Center
+                .clickable { onNavigateToSignIn() },
+            textAlign = TextAlign.Center,
+            fontSize = 16.sp,
+            color = SubTextDark,
+            fontWeight = FontWeight.Bold
         )
     }
 }
