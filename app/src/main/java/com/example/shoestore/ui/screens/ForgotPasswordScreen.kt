@@ -13,13 +13,34 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shoestore.ui.theme.*
-
+import androidx.lifecycle.viewmodel.compose.viewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ForgotPasswordScreen(
-    onNavigateBack: () -> Unit = {}
+    onNavigateBack: () -> Unit = {},
+    onEmailSent: (email: String) -> Unit
 ) {
-    var email by remember { mutableStateOf("") }
+    val viewModel: com.example.shoestore.ui.viewmodel.ForgotPasswordViewModel = viewModel()
+
+    // Показываем диалог при успешной отправке
+    if (viewModel.showEmailSentDialog.value) {
+        EmailSentAlertDialog(
+            onDismissRequest = {
+                viewModel.closeEmailSentDialog()
+                onEmailSent(viewModel.email)
+            }
+        )
+    }
+
+    // Наблюдаем за состоянием отправки
+    LaunchedEffect(viewModel.forgotPasswordState) {
+        when (val state = viewModel.forgotPasswordState.value) {
+            is com.example.shoestore.ui.viewmodel.ForgotPasswordState.Success -> {
+                // Диалог показывается через showEmailSentDialog
+            }
+            else -> {}
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -62,8 +83,8 @@ fun ForgotPasswordScreen(
         )
 
         OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
+            value = viewModel.email,
+            onValueChange = { viewModel.email = it },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
@@ -74,6 +95,12 @@ fun ForgotPasswordScreen(
                 )
             },
             singleLine = true,
+            isError = viewModel.emailError != null,
+            supportingText = {
+                viewModel.emailError?.let { error ->
+                    Text(text = error, color = Color.Red)
+                }
+            },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color.Transparent,
                 unfocusedBorderColor = Color.Transparent,
@@ -88,7 +115,7 @@ fun ForgotPasswordScreen(
 
         Button(
             onClick = {
-                // TODO: Логика отправки email для сброса пароля
+                viewModel.sendRecoveryEmail()
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -98,12 +125,20 @@ fun ForgotPasswordScreen(
             ),
             shape = RoundedCornerShape(16.dp)
         ) {
-            Text(
-                text = "Отправить", // Хардкод вместо stringResource(R.string.twentythree)
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
+            if (viewModel.isLoading.value) {
+                CircularProgressIndicator(
+                    color = Color.White,
+                    strokeWidth = 2.dp,
+                    modifier = Modifier.size(20.dp)
+                )
+            } else {
+                Text(
+                    text = "Отправить",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+            }
         }
     }
 }

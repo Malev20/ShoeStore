@@ -30,32 +30,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shoestore.R
 import com.example.shoestore.ui.theme.*
-
+import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun RegisterAccountScreen(
-    onNavigateToSignIn: () -> Unit
+    onNavigateToSignIn: () -> Unit,
+    onRegisterSuccess: (email: String) -> Unit
 ) {
-    // Состояния полей ввода
-    var name by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var agree by remember { mutableStateOf(false) }
-    var passwordVisible by remember { mutableStateOf(false) }
-    var isLoading by remember { mutableStateOf(false) }
-    var emailError by remember { mutableStateOf("") }
+    val viewModel: com.example.shoestore.ui.viewmodel.RegisterViewModel = viewModel()
 
-    // Цвета
-    val activeButtonColor = Accent // Активная кнопка (синий)
-    val inactiveButtonColor = Color(0xFF2B6B8B) // Неактивная кнопка (#2B6B8B)
-    val linkColor = Color(0xFF6A6A6A) // Цвет ссылки (#6A6A6A)
-
-    // Функция проверки email
-    fun checkEmail(email: String): String {
-        val pattern = "^[a-z0-9]+@[a-z0-9]+\\.[a-z]{3,}$"
-        return if (email.isNotEmpty() && !email.matches(pattern.toRegex())) {
-            "Неверный формат email. Пример: name@domain.ru"
-        } else {
-            ""
+    // Наблюдаем за состоянием регистрации
+    LaunchedEffect(viewModel.registerState) {
+        when (val state = viewModel.registerState.value) {
+            is com.example.shoestore.ui.viewmodel.RegisterState.Success -> {
+                onRegisterSuccess(viewModel.email)
+                viewModel.resetState()
+            }
+            else -> {}
         }
     }
 
@@ -66,7 +56,6 @@ fun RegisterAccountScreen(
             .padding(20.dp)
             .verticalScroll(rememberScrollState())
     ) {
-
         Spacer(modifier = Modifier.height(24.dp))
 
         // "Регистрация"
@@ -96,8 +85,8 @@ fun RegisterAccountScreen(
             modifier = Modifier.padding(bottom = 8.dp)
         )
         OutlinedTextField(
-            value = name,
-            onValueChange = { name = it },
+            value = viewModel.name,
+            onValueChange = { viewModel.name = it },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
@@ -108,6 +97,12 @@ fun RegisterAccountScreen(
                     color = SubTextDark,
                     fontSize = 16.sp
                 )
+            },
+            isError = viewModel.nameError != null,
+            supportingText = {
+                viewModel.nameError?.let { error ->
+                    Text(text = error, color = Color.Red)
+                }
             },
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Block,
@@ -128,11 +123,8 @@ fun RegisterAccountScreen(
             modifier = Modifier.padding(bottom = 8.dp)
         )
         OutlinedTextField(
-            value = email,
-            onValueChange = {
-                email = it
-                emailError = checkEmail(it)
-            },
+            value = viewModel.email,
+            onValueChange = { viewModel.email = it },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
@@ -144,25 +136,21 @@ fun RegisterAccountScreen(
                     fontSize = 16.sp
                 )
             },
+            isError = viewModel.emailError != null,
+            supportingText = {
+                viewModel.emailError?.let { error ->
+                    Text(text = error, color = Color.Red)
+                }
+            },
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Block,
                 unfocusedContainerColor = Block,
-                focusedIndicatorColor = if (emailError.isNotEmpty()) Color.Red else Color.Transparent,
-                unfocusedIndicatorColor = if (emailError.isNotEmpty()) Color.Red else Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
                 cursorColor = Accent
             ),
             shape = RoundedCornerShape(16.dp)
         )
-
-        // Ошибка email
-        if (emailError.isNotEmpty()) {
-            Text(
-                text = emailError,
-                color = Color.Red,
-                fontSize = 16.sp,
-                modifier = Modifier.padding(top = 4.dp)
-            )
-        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -173,13 +161,13 @@ fun RegisterAccountScreen(
             modifier = Modifier.padding(bottom = 8.dp)
         )
         OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
+            value = viewModel.password,
+            onValueChange = { viewModel.password = it },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
             singleLine = true,
-            visualTransformation = if (passwordVisible)
+            visualTransformation = if (viewModel.passwordVisible)
                 VisualTransformation.None
             else
                 PasswordVisualTransformation(),
@@ -191,18 +179,24 @@ fun RegisterAccountScreen(
                 )
             },
             trailingIcon = {
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                IconButton(onClick = { viewModel.togglePasswordVisibility() }) {
                     Icon(
-                        imageVector = if (passwordVisible)
+                        imageVector = if (viewModel.passwordVisible)
                             Icons.Filled.Visibility
                         else
                             Icons.Filled.VisibilityOff,
-                        contentDescription = if (passwordVisible)
+                        contentDescription = if (viewModel.passwordVisible)
                             "Скрыть пароль"
                         else
                             "Показать пароль",
                         tint = SubTextDark
                     )
+                }
+            },
+            isError = viewModel.passwordError != null,
+            supportingText = {
+                viewModel.passwordError?.let { error ->
+                    Text(text = error, color = Color.Red)
                 }
             },
             colors = TextFieldDefaults.colors(
@@ -225,17 +219,17 @@ fun RegisterAccountScreen(
                 modifier = Modifier
                     .size(24.dp)
                     .background(
-                        if (agree) Accent else Color.Transparent,
+                        if (viewModel.agree) Accent else Color.Transparent,
                         RoundedCornerShape(4.dp)
                     )
                     .border(
                         width = 1.dp,
-                        color = if (agree) Accent else SubTextDark,
+                        color = if (viewModel.agree) Accent else SubTextDark,
                         shape = RoundedCornerShape(4.dp)
                     )
-                    .clickable { agree = !agree }
+                    .clickable { viewModel.agree = !viewModel.agree }
             ) {
-                if (agree) {
+                if (viewModel.agree) {
                     Image(
                         painter = painterResource(id = R.drawable.policy_check),
                         contentDescription = "Согласие принято",
@@ -255,7 +249,7 @@ fun RegisterAccountScreen(
                         style = SpanStyle(
                             color = SubTextDark,
                             fontSize = 16.sp,
-                            textDecoration = TextDecoration.Underline // Подчеркивание
+                            textDecoration = TextDecoration.Underline
                         )
                     ) {
                         append("Даю согласие на обработку\nперсональных данных")
@@ -268,20 +262,20 @@ fun RegisterAccountScreen(
 
         Button(
             onClick = {
-                isLoading = true
-
+                viewModel.register()
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
-            enabled = agree && !isLoading,
+            enabled = viewModel.agree && !viewModel.isLoading.value,
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (agree && !isLoading) activeButtonColor else inactiveButtonColor,
-                disabledContainerColor = inactiveButtonColor
+                containerColor = if (viewModel.agree && !viewModel.isLoading.value)
+                    Accent else Color(0xFF2B6B8B),
+                disabledContainerColor = Color(0xFF2B6B8B)
             ),
             shape = RoundedCornerShape(16.dp)
         ) {
-            if (isLoading) {
+            if (viewModel.isLoading.value) {
                 CircularProgressIndicator(
                     color = Color.White,
                     strokeWidth = 2.dp,
@@ -305,7 +299,7 @@ fun RegisterAccountScreen(
             buildAnnotatedString {
                 withStyle(
                     style = SpanStyle(
-                        color = linkColor, // #6A6A6A
+                        color = Color(0xFF6A6A6A),
                         fontSize = 16.sp,
                         textDecoration = TextDecoration.None
                     )
@@ -314,9 +308,9 @@ fun RegisterAccountScreen(
                 }
                 withStyle(
                     style = SpanStyle(
-                        color = linkColor, // #6A6A6A
+                        color = Color(0xFF6A6A6A),
                         fontSize = 16.sp,
-                        textDecoration = TextDecoration.Underline, // Подчеркивание
+                        textDecoration = TextDecoration.Underline,
                         fontWeight = FontWeight.Bold
                     )
                 ) {

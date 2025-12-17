@@ -19,31 +19,31 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import com.example.shoestore.R
 import com.example.shoestore.ui.theme.*
+import androidx.lifecycle.viewmodel.compose.viewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OtpVerificationScreen(
-    onNavigateToNewPassword: () -> Unit
+    email: String,
+    onNavigateToNewPassword: (token: String) -> Unit,
+    onNavigateBack: () -> Unit
 ) {
-    var otpCode by remember { mutableStateOf("") }
-    var timerSeconds by remember { mutableStateOf(30) }
-    var isTimerRunning by remember { mutableStateOf(false) }
-    var hasStartedTyping by remember { mutableStateOf(false) }
+    val viewModel: com.example.shoestore.ui.viewmodel.OtpVerificationViewModel = viewModel()
 
-    LaunchedEffect(hasStartedTyping, isTimerRunning) {
-        if (hasStartedTyping && isTimerRunning) {
-            while (timerSeconds > 0 && isTimerRunning) {
-                delay(1000L)
-                timerSeconds--
-            }
-            if (timerSeconds == 0) {
-                isTimerRunning = false
-            }
-        }
+    // Устанавливаем email при создании
+    LaunchedEffect(Unit) {
+        viewModel.setEmailForVerification(email)
     }
 
-    LaunchedEffect(otpCode) {
-        if (otpCode.length == 6) {
-            onNavigateToNewPassword()
+    // Наблюдаем за состоянием OTP
+    LaunchedEffect(viewModel.otpState) {
+        when (val state = viewModel.otpState.value) {
+            is com.example.shoestore.ui.viewmodel.OtpState.Success -> {
+                // В реальном приложении здесь нужно получить токен
+                // Пока используем OTP как токен
+                onNavigateToNewPassword(viewModel.otpCode)
+                viewModel.resetState()
+            }
+            else -> {}
         }
     }
 
@@ -57,7 +57,7 @@ fun OtpVerificationScreen(
         Spacer(modifier = Modifier.height(40.dp))
 
         Text(
-            text = stringResource(R.string.twentysix),
+            text = "Проверьте Ваш Email",
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
             color = Text
@@ -66,7 +66,7 @@ fun OtpVerificationScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = stringResource(R.string.twentyseven),
+            text = "Мы отправили код восстановления пароля на вашу электронную почту.",
             fontSize = 16.sp,
             color = SubTextDark,
             textAlign = TextAlign.Center,
@@ -79,7 +79,7 @@ fun OtpVerificationScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = stringResource(R.string.twentyeight),
+                text = "Код",
                 fontSize = 16.sp,
                 color = Text,
                 modifier = Modifier
@@ -89,19 +89,9 @@ fun OtpVerificationScreen(
 
             // Поле для ввода OTP кода
             OutlinedTextField(
-                value = otpCode,
+                value = viewModel.otpCode,
                 onValueChange = { newText ->
-                    val digits = newText.filter { it.isDigit() }
-                    if (digits.length <= 6) {
-                        otpCode = digits
-
-                        // Запускаем таймер когда начали вводить
-                        if (!hasStartedTyping && digits.isNotEmpty()) {
-                            hasStartedTyping = true
-                            isTimerRunning = true
-                            timerSeconds = 30
-                        }
-                    }
+                    viewModel.updateOtpCode(newText)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -125,6 +115,12 @@ fun OtpVerificationScreen(
                     textAlign = TextAlign.Center,
                     color = Text
                 ),
+                isError = viewModel.showOtpError,
+                supportingText = {
+                    if (viewModel.showOtpError) {
+                        Text(text = viewModel.otpError ?: "Ошибка", color = Color.Red)
+                    }
+                },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Accent,
                     unfocusedBorderColor = Color(0xFFE0E0E0),
@@ -142,12 +138,15 @@ fun OtpVerificationScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = if (hasStartedTyping) formatTimer(timerSeconds) else "00:30",
+                    text = if (viewModel.hasStartedTyping.value)
+                        viewModel.formatTimer()
+                    else
+                        "00:30",
                     fontSize = 20.sp,
                     color = when {
-                        !hasStartedTyping -> Color(0xFFA0A0A0) // Серый когда не активен
-                        timerSeconds > 10 -> Accent // Синий
-                        else -> Color.Red // Красный когда мало времени
+                        !viewModel.hasStartedTyping.value -> Color(0xFFA0A0A0)
+                        viewModel.timerSeconds.value > 10 -> Accent
+                        else -> Color.Red
                     },
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.align(Alignment.CenterEnd)
@@ -158,12 +157,10 @@ fun OtpVerificationScreen(
         Spacer(modifier = Modifier.weight(1f))
 
         // Кнопка для переотправки кода
-        if (hasStartedTyping && !isTimerRunning) {
+        if (viewModel.hasStartedTyping.value && !viewModel.isTimerRunning.value) {
             TextButton(
                 onClick = {
-                    timerSeconds = 30
-                    isTimerRunning = true
-                    println("Запрошена переотправка OTP кода")
+                    viewModel.resendOtp()
                 },
                 modifier = Modifier.padding(bottom = 24.dp)
             ) {
@@ -175,15 +172,7 @@ fun OtpVerificationScreen(
                 )
             }
         } else {
-            // Просто отступ вместо кнопки
             Spacer(modifier = Modifier.height(24.dp))
         }
     }
-}
-
-// Форматирование таймера
-private fun formatTimer(seconds: Int): String {
-    val minutes = seconds / 60
-    val remainingSeconds = seconds % 60
-    return String.format("%02d:%02d", minutes, remainingSeconds)
 }

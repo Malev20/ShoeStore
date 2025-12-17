@@ -1,76 +1,102 @@
 package com.example.shoestore.navigation
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.shoestore.ui.screens.*
 
 @Composable
 fun ShoeStoreNavigation() {
     val navController = rememberNavController()
-    var pendingEmail by remember { mutableStateOf<String?>(null) }
 
     NavHost(
         navController = navController,
-        startDestination = Screen.SignIn.name
+        startDestination = Screen.SignIn.route
     ) {
-        composable(Screen.SignIn.name) {
+        // Экран входа
+        composable(Screen.SignIn.route) {
             SignInScreen(
-
-            )
-        }
-
-        composable(Screen.Register.name) {
-            RegisterAccountScreen(
-                onNavigateToSignIn = {
-                    navController.popBackStack()
-                }
-            )
-        }
-
-        composable(Screen.ForgotPassword.name) {
-            ForgotPasswordScreen(
-                onNavigateBack = {
-                    navController.popBackStack()
-                }
-            )
-        }
-
-        composable(Screen.OtpVerification.name) {
-            LaunchedEffect(pendingEmail) {
-                if (pendingEmail != null) {
-                    println("Email для OTP: $pendingEmail")
-                    pendingEmail = null
-                }
-            }
-
-            OtpVerificationScreen(
-                onNavigateToNewPassword = {
-                    navController.navigate(Screen.CreateNewPassword.name)
-                }
-            )
-        }
-
-        composable(Screen.CreateNewPassword.name) {
-            CreateNewPasswordScreen(
-                onNavigateToNextScreen = {
-                    navController.navigate(Screen.SignIn.name) {
+                onNavigateToRegister = {
+                    navController.navigate(Screen.Register.route)
+                },
+                onNavigateToForgotPassword = {
+                    navController.navigate(Screen.ForgotPassword.route)
+                },
+                onSignInSuccess = {
+                    navController.navigate(Screen.Main.route) {
                         popUpTo(0)
                     }
                 }
             )
         }
 
-        composable(Screen.Main.name) {
+        // Экран регистрации
+        composable(Screen.Register.route) {
+            RegisterAccountScreen(
+                onNavigateToSignIn = {
+                    navController.popBackStack()
+                },
+                onRegisterSuccess = { email ->
+                    navController.navigate(Screen.OtpVerification.createRoute(email))
+                }
+            )
+        }
+
+        // Экран восстановления пароля
+        composable(Screen.ForgotPassword.route) {
+            ForgotPasswordScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                },
+                onEmailSent = { email ->
+                    navController.navigate(Screen.OtpVerification.createRoute(email))
+                }
+            )
+        }
+
+        // Экран верификации OTP
+        composable(
+            route = Screen.OtpVerification.routeWithArg,
+            arguments = listOf(navArgument("email") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val email = backStackEntry.arguments?.getString("email") ?: ""
+
+            OtpVerificationScreen(
+                email = email,
+                onNavigateToNewPassword = { token ->
+                    navController.navigate(Screen.CreateNewPassword.createRoute(token))
+                },
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        // Экран создания нового пароля
+        composable(
+            route = Screen.CreateNewPassword.routeWithArg,
+            arguments = listOf(navArgument("token") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val token = backStackEntry.arguments?.getString("token") ?: ""
+
+            CreateNewPasswordScreen(
+                authToken = token,
+                onNavigateToSignIn = {
+                    navController.navigate(Screen.SignIn.route) {
+                        popUpTo(0)
+                    }
+                }
+            )
+        }
+
+        // Главный экран (после входа)
+        composable(Screen.Main.route) {
             MainScreen(
                 onLogout = {
-                    navController.navigate(Screen.SignIn.name) {
+                    navController.navigate(Screen.SignIn.route) {
                         popUpTo(0)
                     }
                 }
@@ -79,17 +105,18 @@ fun ShoeStoreNavigation() {
     }
 }
 
-enum class Screen {
-    SignIn,
-    Register,
-    ForgotPassword,
-    OtpVerification,
-    CreateNewPassword,
-    Main
-}
-
-// Заглушка для главного экрана
-@Composable
-fun MainScreen(onLogout: () -> Unit) {
-    androidx.compose.material3.Text("Главный экран приложения")
+// Определение экранов
+sealed class Screen(val route: String) {
+    object SignIn : Screen("sign_in")
+    object Register : Screen("register")
+    object ForgotPassword : Screen("forgot_password")
+    object OtpVerification : Screen("otp_verification") {
+        const val routeWithArg = "otp_verification/{email}"
+        fun createRoute(email: String) = "otp_verification/$email"
+    }
+    object CreateNewPassword : Screen("create_new_password") {
+        const val routeWithArg = "create_new_password/{token}"
+        fun createRoute(token: String) = "create_new_password/$token"
+    }
+    object Main : Screen("main")
 }
