@@ -1,5 +1,5 @@
 package com.example.shoestore.ui.screens
-
+import androidx.compose.ui.text.style.TextDecoration
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.foundation.background
@@ -194,7 +194,7 @@ fun RegisterAccountScreen(
             onValueChange = { email = it },
             placeholder = {
                 Text(
-                    "......@mail.com",
+                    "xyz@gmail.com",
                     style = AppTypography.bodyRegular14,
                     color = hintColor
                 )
@@ -231,7 +231,7 @@ fun RegisterAccountScreen(
             onValueChange = { password = it },
             placeholder = {
                 Text(
-                    "......",
+                    "•••••••",
                     style = AppTypography.bodyRegular14,
                     color = hintColor
                 )
@@ -266,9 +266,9 @@ fun RegisterAccountScreen(
                     Icon(
                         painter = painterResource(
                             id = if (passwordVisible) {
-                                R.drawable.eye_close
-                            } else {
                                 R.drawable.eye_open
+                            } else {
+                                R.drawable.eye_close
                             }
                         ),
                         contentDescription = if (passwordVisible) {
@@ -327,7 +327,9 @@ fun RegisterAccountScreen(
 
             Text(
                 text = stringResource(id = R.string.agree),
-                style = AppTypography.bodyRegular14,
+                style = AppTypography.bodyRegular14.copy(
+                    textDecoration = TextDecoration.Underline // Добавляем подчеркивание
+                ),
                 color = hintColor,
                 modifier = Modifier.weight(1f)
             )

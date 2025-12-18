@@ -13,7 +13,7 @@
     <string name="next">Next</string>
     <string name="register">Register Account</string>
     <string name="name">Your Name</string>
-    <string name="agree">I agree to the processing of personal data</string>
+    <string name="agree">I agree to the processing of\n personal data</string>
     <string name="sign_up">Sign up</string>
     <string name="sign_in"> Sign in</string>
     <string name="new_user">New User?</string>
@@ -72,5 +72,4 @@
     <string name="create">Create Account</string>
     <string name="cancel">Cancel</string>
     <string name="verify">Verify Email</string>
-
 </resources>

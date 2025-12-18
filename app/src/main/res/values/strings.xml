@@ -14,7 +14,7 @@
     <string name="next">Далее</string>
     <string name="register">Регистрация</string>
     <string name="name">Ваше имя</string>
-    <string name="agree">Даю согласие на обработку персональных данных</string>
+    <string name="agree">Даю согласие на обработку\n персональных данных</string>
     <string name="sign_up">Зарегистрироваться</string>
     <string name="sign_in"> Войти</string>
     <string name="new_user">Вы впервые?</string>

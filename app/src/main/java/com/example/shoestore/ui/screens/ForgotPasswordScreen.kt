@@ -9,10 +9,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.shoestore.R
 import com.example.shoestore.ui.components.BackButton
 import com.example.shoestore.ui.components.DisableButton
 import com.example.shoestore.ui.theme.*
@@ -36,7 +38,10 @@ fun ForgotPasswordScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().background(Background).padding(24.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Background)
+            .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
@@ -44,9 +49,14 @@ fun ForgotPasswordScreen(
         }
 
         Spacer(modifier = Modifier.height(40.dp))
-        Text("Забыл пароль", style = AppTypography.headingRegular32)
+
         Text(
-            "Введите свою учетную запись \nдля сброса пароля",
+            text = stringResource(id = R.string.forgot_password),
+            style = AppTypography.headingRegular32
+        )
+
+        Text(
+            text = stringResource(id = R.string.enter_email_to_reset),
             style = AppTypography.bodyRegular16,
             color = SubtextDark,
             textAlign = TextAlign.Center,
@@ -66,7 +76,7 @@ fun ForgotPasswordScreen(
             CircularProgressIndicator(color = Accent)
         } else {
             DisableButton(
-                text = "Отправить",
+                text = stringResource(id = R.string.send),
                 onClick = {
                     if (email.contains("@")) {
                         viewModel.sendResetCode(email)
@@ -77,7 +87,10 @@ fun ForgotPasswordScreen(
         }
 
         if (state is ForgotPasswordState.Error) {
-            Text((state as ForgotPasswordState.Error).message, color = Red)
+            Text(
+                text = (state as ForgotPasswordState.Error).message,
+                color = Red
+            )
         }
     }
 
@@ -85,13 +98,21 @@ fun ForgotPasswordScreen(
         AlertDialog(
             onDismissRequest = { showDialog = false },
             confirmButton = {
-                Button(onClick = {
-                    showDialog = false
-                    onNavigateToOTP(email)
-                }) { Text("ОК") }
+                Button(
+                    onClick = {
+                        showDialog = false
+                        onNavigateToOTP(email)
+                    }
+                ) {
+                    Text("OK")
+                }
             },
-            title = { Text("Проверьте почту") },
-            text = { Text("Код восстановления отправлен на $email") }
+            title = {
+                Text(stringResource(id = R.string.check_your_email))
+            },
+            text = {
+                Text(stringResource(id = R.string.recovery_code_sent))
+            }
         )
     }
 }

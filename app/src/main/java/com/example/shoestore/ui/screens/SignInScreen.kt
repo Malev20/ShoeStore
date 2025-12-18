@@ -125,7 +125,7 @@ fun SignInScreen(
             onValueChange = { email = it },
             placeholder = {
                 Text(
-                    "......@mail.com",
+                    "xyz@gmail.com",
                     style = AppTypography.bodyRegular14,
                     color = hintColor
                 )
@@ -162,7 +162,7 @@ fun SignInScreen(
             onValueChange = { password = it },
             placeholder = {
                 Text(
-                    "......",
+                    "•••••••",
                     style = AppTypography.bodyRegular14,
                     color = hintColor
                 )
@@ -196,9 +196,9 @@ fun SignInScreen(
                     Icon(
                         painter = painterResource(
                             id = if (passwordVisible) {
-                                R.drawable.eye_close
-                            } else {
                                 R.drawable.eye_open
+                            } else {
+                                R.drawable.eye_close
                             }
                         ),
                         contentDescription = if (passwordVisible) {
