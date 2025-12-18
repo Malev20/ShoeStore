@@ -1,4 +1,5 @@
 package com.example.shoestore.ui.screens
+import androidx.compose.ui.res.painterResource
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -95,24 +96,77 @@ fun ForgotPasswordScreen(
     }
 
     if (showDialog) {
-        AlertDialog(
-            onDismissRequest = { showDialog = false },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        showDialog = false
-                        onNavigateToOTP(email)
-                    }
+        Dialog(
+            onDismissRequest = { showDialog = false }
+        ) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("OK")
+
+                    // 🔵 СИНИЙ КРУЖОК С ИКОНКОЙ
+                    Box(
+                        modifier = Modifier
+                            .size(88.dp) // диаметр = 44dp * 2
+                            .background(
+                                color = Accent,
+                                shape = RoundedCornerShape(44.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.email_alert),
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    // Заголовок
+                    Text(
+                        text = stringResource(id = R.string.check_your_email),
+                        style = AppTypography.bodyMedium16,
+                        color = Color.Black
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Описание
+                    Text(
+                        text = stringResource(id = R.string.recovery_code_sent),
+                        style = AppTypography.bodyRegular14,
+                        color = SubtextDark,
+                        textAlign = TextAlign.Center
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    // Кнопка
+                    Button(
+                        onClick = {
+                            showDialog = false
+                            onNavigateToOTP(email)
+                        },
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Accent),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("OK", color = Color.White)
+                    }
                 }
-            },
-            title = {
-                Text(stringResource(id = R.string.check_your_email))
-            },
-            text = {
-                Text(stringResource(id = R.string.recovery_code_sent))
             }
-        )
+        }
     }
+
 }
