@@ -14,7 +14,10 @@ fun NavigationApp(navController: NavHostController) {
     ) {
         composable("start_menu") {
             OnboardScreen(
-                onGetStartedClick = { navController.navigate("sign_up") },
+                onGetStartedClick = {
+                    // ИЗМЕНЕНИЕ: перенаправляем на sign_in вместо sign_up
+                    navController.navigate("sign_in")
+                },
             )
         }
 

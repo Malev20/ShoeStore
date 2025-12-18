@@ -26,6 +26,7 @@ import com.example.shoestore.ui.theme.ShoeShopTheme
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 import com.example.shoestore.R
+
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun OnboardScreen(
@@ -61,7 +62,7 @@ fun OnboardScreen(
     val pagerState = rememberPagerState(initialPage = 0)
     val coroutineScope = rememberCoroutineScope()
 
-    Box(modifier = Modifier.fillMaxSize     ()) {
+    Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(
             count = slides.size,
             state = pagerState,
@@ -100,28 +101,7 @@ fun OnboardScreen(
                 .padding(horizontal = 24.dp, vertical = 48.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                modifier = Modifier.padding(bottom = 32.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                repeat(slides.size) { index ->
-                    val size = animateDpAsState(
-                        targetValue = if (pagerState.currentPage == index) 12.dp else 8.dp
-                    )
-                    val dotColor = if (pagerState.currentPage == index) {
-                        Color.White
-                    } else {
-                        Color.White.copy(alpha = 0.5f)
-                    }
-
-                    Box(
-                        modifier = Modifier
-                            .size(size.value)
-                            .clip(CircleShape)
-                            .background(dotColor)
-                    )
-                }
-            }
+            // УБРАЛИ ТОЧКИ ПАГИНАЦИИ ЗДЕСЬ
 
             OnboardButtun(
                 onClick = {
