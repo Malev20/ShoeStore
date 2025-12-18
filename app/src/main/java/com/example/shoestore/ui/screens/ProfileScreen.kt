@@ -80,8 +80,22 @@ fun ProfileScreen(viewModel: ProfileViewModel = viewModel()) {
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.weight(1f)
                 )
-                IconButton(onClick = { viewModel.isEditing = !viewModel.isEditing }) {
-                    Icon(painterResource(id = R.drawable.edit), contentDescription = "Редактировать")
+
+                // Кнопка редактирования с синим кружком
+                Box(
+                    modifier = Modifier
+                        .size(30.dp) // Размер кружка
+                        .clip(CircleShape) // Делаем круглую форму
+                        .background(Color(0xFF48B2E7)) // Цвет фона #F7F7F9
+                        .clickable { viewModel.isEditing = !viewModel.isEditing }
+                        .padding(8.dp), // Внутренние отступы для иконки
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.edit),
+                        contentDescription = "Редактировать",
+                        tint = Color.White // Черный цвет иконки
+                    )
                 }
             }
 
