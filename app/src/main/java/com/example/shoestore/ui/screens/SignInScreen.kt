@@ -3,233 +3,283 @@ package com.example.shoestore.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.shoestore.R
+import com.example.shoestore.ui.components.BackButton
+import com.example.shoestore.ui.components.DisableButton
+import com.example.shoestore.ui.viewmodel.SignInState
 import com.example.shoestore.ui.viewmodel.SignInViewModel
+import com.example.shoestore.ui.theme.AppTypography
+import com.example.shoestore.ui.theme.ShoeShopTheme
 
-// Цвета
-val Accent = Color(0xFF48B2E7)
-val Background = Color(0xFFF8F9FF)
-val Block = Color.White
-val TextColor = Color(0xFF333333)
-val SubTextDark = Color(0xFF666666)
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(
-    onNavigateToRegister: () -> Unit,
-    onNavigateToForgotPassword: () -> Unit,
-    onSignInSuccess: () -> Unit
+    modifier: Modifier = Modifier,
+    onForgotPasswordClick : () -> Unit = {} ,
+    onSignInClick : () -> Unit = {} ,
+    onSignUpClick : () -> Unit = {},
+    viewModel: SignInViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
-    val viewModel: SignInViewModel = viewModel()
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
+    val checkedState = remember { mutableStateOf(false) }
+    val signInState by viewModel.signInState.collectAsStateWithLifecycle()
+    var showErrorDialog by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
-    val isLoading by viewModel.isLoading.collectAsState()
-    val signInState by viewModel.signInState.collectAsState()
+    val hintColor = MaterialTheme.colorScheme.onSurfaceVariant
+    val borderColor = MaterialTheme.colorScheme.outline
 
     LaunchedEffect(signInState) {
-        if (signInState is com.example.shoestore.ui.viewmodel.SignInState.Success) {
-            onSignInSuccess()
-            viewModel.resetState()
+        when (signInState) {
+            is SignInState.Success -> {
+
+                onSignInClick()
+                viewModel.resetState()
+            }
+            is SignInState.Error -> {
+                errorMessage = (signInState as SignInState.Error).message
+                showErrorDialog = true
+                viewModel.resetState()
+            }
+            else -> {}
         }
     }
 
-    // КОРНЕВОЙ КОНТЕЙНЕР БЕЗ PADDING
-    Box(
+    if (showErrorDialog) {
+        AlertDialog(
+            onDismissRequest = { showErrorDialog = false },
+            title = { Text("Authentication Error") },
+            text = { Text(errorMessage) },
+            confirmButton = {
+                Button(
+                    onClick = { showErrorDialog = false },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0560FA))
+                ) {
+                    Text("OK")
+                }
+            }
+        )
+    }
+
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Background)
+            .padding(23.dp)
+            .background(Color.White),
+        verticalArrangement = Arrangement.Center,
     ) {
-        // ОСНОВНОЙ КОНТЕНТ С PADDING
+        BackButton(
+            onClick = {}
+        )
+
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp),
+            modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            Spacer(modifier = Modifier.height(40.dp))
+            Text(
+                text = stringResource(id = R.string.hello),
+                style = AppTypography.headingRegular32,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
 
             Text(
-                text = "Привет!",
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                color = TextColor
+                text = stringResource(id = R.string.details),
+                style = AppTypography.subtitleRegular16,
+                color = MaterialTheme.colorScheme.outline,
+                modifier = Modifier.padding(bottom = 54.dp)
             )
+        }
 
-            Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = stringResource(id = R.string.email),
+            style = AppTypography.bodyMedium16.copy(fontWeight = FontWeight.Medium),
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
 
-            Text(
-                text = "Заполните свои данные",
-                fontSize = 16.sp,
-                color = SubTextDark
-            )
+        OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            placeholder = {
+                Text(
+                    "......@mail.com",
+                    style = AppTypography.bodyRegular14,
+                    color = hintColor
+                )
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 20.dp),
+            shape = MaterialTheme.shapes.medium,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            colors = OutlinedTextFieldDefaults.colors(
+                unfocusedBorderColor = borderColor,
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = hintColor,
+                focusedLabelColor = MaterialTheme.colorScheme.primary,
+                cursorColor = MaterialTheme.colorScheme.primary,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                focusedPlaceholderColor = hintColor,
+                unfocusedPlaceholderColor = hintColor
+            ),
+            textStyle = AppTypography.bodyRegular16,
+            singleLine = true
+        )
 
-            Spacer(modifier = Modifier.height(32.dp))
+        Text(
+            text = stringResource(id = R.string.pass),
+            style = AppTypography.bodyMedium16.copy(fontWeight = FontWeight.Medium),
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
 
-            // ===== Email =====
-            Text(
-                text = "Email",
-                fontSize = 16.sp,
-                color = TextColor,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            OutlinedTextField(
-                value = viewModel.email,
-                onValueChange = { viewModel.email = it },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                singleLine = true,
-                placeholder = {
-                    Text("xyz@gmail.com", color = SubTextDark)
-                },
-                textStyle = LocalTextStyle.current.copy(
-                    color = TextColor,
-                    fontSize = 16.sp
-                ),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Accent,
-                    unfocusedBorderColor = Color(0xFFE0E0E0),
-                    focusedContainerColor = Block,
-                    unfocusedContainerColor = Block,
-                    cursorColor = Accent,
-                    focusedTextColor = TextColor,
-                    unfocusedTextColor = TextColor
-                ),
-                shape = RoundedCornerShape(12.dp)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // ===== Пароль =====
-            Text(
-                text = "Пароль",
-                fontSize = 16.sp,
-                color = TextColor,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            OutlinedTextField(
-                value = viewModel.password,
-                onValueChange = { viewModel.password = it },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                singleLine = true,
-                visualTransformation = if (viewModel.passwordVisible)
-                    VisualTransformation.None
-                else
-                    PasswordVisualTransformation(),
-                placeholder = {
-                    Text("••••••••", color = SubTextDark)
-                },
-                textStyle = LocalTextStyle.current.copy(
-                    color = TextColor,
-                    fontSize = 16.sp
-                ),
-                trailingIcon = {
-                    IconButton(onClick = { viewModel.togglePasswordVisibility() }) {
-                        Icon(
-                            imageVector = if (viewModel.passwordVisible)
-                                Icons.Default.Visibility
-                            else
-                                Icons.Default.VisibilityOff,
-                            contentDescription = null,
-                            tint = SubTextDark
-                        )
-                    }
-                },
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Accent,
-                    unfocusedBorderColor = Color(0xFFE0E0E0),
-                    focusedContainerColor = Block,
-                    unfocusedContainerColor = Block,
-                    cursorColor = Accent,
-                    focusedTextColor = TextColor,
-                    unfocusedTextColor = TextColor
-                ),
-                shape = RoundedCornerShape(12.dp)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "Восстановить",
-                fontSize = 14.sp,
-                color = Accent,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .clickable { onNavigateToForgotPassword() }
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // ===== КНОПКА =====
-            Button(
-                onClick = { viewModel.signIn() },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Accent
-                ),
-                shape = RoundedCornerShape(16.dp)
-            ) {
-                if (isLoading) {
-                    CircularProgressIndicator(
-                        color = Color.White,
-                        strokeWidth = 2.dp,
-                        modifier = Modifier.size(20.dp)
-                    )
-                } else {
-                    Text(
-                        text = "Войти",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            placeholder = {
+                Text(
+                    "......",
+                    style = AppTypography.bodyRegular14,
+                    color = hintColor
+                )
+            },
+            visualTransformation = if (passwordVisible) {
+                VisualTransformation.None
+            } else {
+                PasswordVisualTransformation()
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            modifier = Modifier
+                .fillMaxWidth(),
+            shape = MaterialTheme.shapes.medium,
+            colors = OutlinedTextFieldDefaults.colors(
+                unfocusedBorderColor = borderColor,
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = hintColor,
+                focusedLabelColor = MaterialTheme.colorScheme.primary,
+                cursorColor = MaterialTheme.colorScheme.primary,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                focusedPlaceholderColor = hintColor,
+                unfocusedPlaceholderColor = hintColor
+            ),
+            textStyle = AppTypography.bodyRegular16,
+            singleLine = true,
+            trailingIcon = {
+                IconButton(
+                    onClick = { passwordVisible = !passwordVisible }
+                ) {
+                    Icon(
+                        painter = painterResource(
+                            id = if (passwordVisible) {
+                                R.drawable.eye_close
+                            } else {
+                                R.drawable.eye_open
+                            }
+                        ),
+                        contentDescription = if (passwordVisible) {
+                            "Скрыть пароль"
+                        } else {
+                            "Показать пароль"
+                        },
+                        tint = hintColor
                     )
                 }
             }
+        )
+        Row(modifier = Modifier
+            .fillMaxWidth(),
+            horizontalArrangement = Arrangement.End)
+        {
+            Text(
+            text = stringResource(id = R.string.recovery),
+            style = AppTypography.bodyRegular12,
+            color = MaterialTheme.colorScheme.outline,
+                modifier = Modifier
+                    .padding(top = 12.dp)
+                    .clickable { onForgotPasswordClick() }
+                    )
+        }
 
-            Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()
+        DisableButton(
+            text = stringResource(id = R.string.sign_in),
+            onClick = { if (email.isNotEmpty() && password.isNotEmpty()) {
+                viewModel.signIn(email, password)
+            } else {
+                errorMessage = "Please fill in all fields"
+                showErrorDialog = true
+            } },
+            textStyle = AppTypography.bodyMedium16
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            TextButton(
+                onClick = onSignUpClick,
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
             ) {
                 Text(
-                    text = "Вы впервые? ",
-                    fontSize = 16.sp,
-                    color = SubTextDark
-                )
-                Text(
-                    text = "Создать",
-                    fontSize = 16.sp,
-                    color = Accent,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.clickable { onNavigateToRegister() }
+                    buildAnnotatedString {
+                        withStyle(
+                            style = SpanStyle(
+                                color = MaterialTheme.colorScheme.onBackground,
+                                fontFamily = AppTypography.bodyRegular16.fontFamily,
+                                fontSize = AppTypography.bodyRegular16.fontSize
+                            )
+                        ) {
+                            append(stringResource(id = R.string.new_user))
+                        }
+                        append(" ")
+                        withStyle(
+                            style = SpanStyle(
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontFamily = AppTypography.bodyRegular16.fontFamily,
+                                fontSize = AppTypography.bodyRegular16.fontSize,
+                            )
+                        ) {
+                            append(stringResource(id = R.string.create))
+                        }
+                    }
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun SignInScreenScreenPreview() {
+    ShoeShopTheme {
+        SignInScreen()
     }
 }
