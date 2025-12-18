@@ -82,118 +82,133 @@ fun RegisterAccountScreen(
         )
 
         // ===== ИМЯ =====
-        Text("Ваше имя", color = Text, fontSize = 16.sp)
-        Spacer(modifier = Modifier.height(8.dp))
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Ваше имя", color = Text, fontSize = 16.sp)
+            Spacer(modifier = Modifier.height(12.dp))
 
-        OutlinedTextField(
-            value = viewModel.name,
-            onValueChange = { viewModel.name = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .defaultMinSize(minHeight = 56.dp),
-            singleLine = true,
-            placeholder = { Text("XXXXXXXX", color = SubTextDark) },
-            textStyle = LocalTextStyle.current.copy(
-                fontSize = 16.sp,
-                color = Text
-            ),
-            isError = viewModel.nameError != null,
-            supportingText = {
-                viewModel.nameError?.let {
-                    Text(it, color = Color.Red)
-                }
-            },
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Block,
-                unfocusedContainerColor = Block,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                cursorColor = Accent
-            ),
-            shape = RoundedCornerShape(16.dp)
-        )
+            OutlinedTextField(
+                value = viewModel.name,
+                onValueChange = { viewModel.name = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .defaultMinSize(minHeight = 56.dp),
+                singleLine = true,
+                placeholder = { Text("XXXXXXXX", color = SubTextDark) },
+                textStyle = LocalTextStyle.current.copy(
+                    fontSize = 16.sp,
+                    color = Text
+                ),
+                isError = viewModel.nameError != null,
+                supportingText = {
+                    viewModel.nameError?.let {
+                        Text(it, color = Color.Red)
+                    }
+                },
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Block,
+                    unfocusedContainerColor = Block,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    cursorColor = Accent
+                ),
+                shape = RoundedCornerShape(16.dp)
+            )
+        }
 
         Spacer(modifier = Modifier.height(8.dp))
 
         // ===== EMAIL =====
-        Text("Email", color = Text, fontSize = 16.sp)
-        Spacer(modifier = Modifier.height(8.dp))
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Email", color = Text, fontSize = 16.sp)
+            Spacer(modifier = Modifier.height(12.dp))
 
-        OutlinedTextField(
-            value = viewModel.email,
-            onValueChange = { viewModel.email = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .defaultMinSize(minHeight = 56.dp),
-            singleLine = true,
-            placeholder = { Text("xyz@gmail.com", color = SubTextDark) },
-            textStyle = LocalTextStyle.current.copy(
-                fontSize = 16.sp,
-                color = Text
-            ),
-            isError = viewModel.emailError != null,
-            supportingText = {
-                viewModel.emailError?.let {
-                    Text(it, color = Color.Red)
-                }
-            },
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Block,
-                unfocusedContainerColor = Block,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                cursorColor = Accent
-            ),
-            shape = RoundedCornerShape(16.dp)
-        )
+            OutlinedTextField(
+                value = viewModel.email,
+                onValueChange = { viewModel.email = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .defaultMinSize(minHeight = 56.dp),
+                singleLine = true,
+                placeholder = { Text("xyz@gmail.com", color = SubTextDark) },
+                textStyle = LocalTextStyle.current.copy(
+                    fontSize = 16.sp,
+                    color = Text
+                ),
+                isError = viewModel.emailError != null,
+                supportingText = {
+                    viewModel.emailError?.let {
+                        Text(it, color = Color.Red)
+                    }
+                },
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Block,
+                    unfocusedContainerColor = Block,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    cursorColor = Accent
+                ),
+                shape = RoundedCornerShape(16.dp)
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         // ===== ПАРОЛЬ =====
-        Text("Пароль", color = Text, fontSize = 16.sp)
-        Spacer(modifier = Modifier.height(8.dp))
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Пароль", color = Text, fontSize = 16.sp)
+            Spacer(modifier = Modifier.height(12.dp))
 
-        OutlinedTextField(
-            value = viewModel.password,
-            onValueChange = { viewModel.password = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .defaultMinSize(minHeight = 56.dp),
-            singleLine = true,
-            visualTransformation =
-                if (viewModel.passwordVisible) VisualTransformation.None
-                else PasswordVisualTransformation(),
-            placeholder = { Text("•••••••", color = SubTextDark, fontSize = 20.sp) },
-            textStyle = LocalTextStyle.current.copy(
-                fontSize = 16.sp,
-                color = Text
-            ),
-            trailingIcon = {
-                IconButton(onClick = { viewModel.togglePasswordVisibility() }) {
-                    Icon(
-                        imageVector = if (viewModel.passwordVisible)
-                            Icons.Filled.Visibility
-                        else Icons.Filled.VisibilityOff,
-                        contentDescription = null,
-                        tint = SubTextDark
-                    )
-                }
-            },
-            isError = viewModel.passwordError != null,
-            supportingText = {
-                viewModel.passwordError?.let {
-                    Text(it, color = Color.Red)
-                }
-            },
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Block,
-                unfocusedContainerColor = Block,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                cursorColor = Accent
-            ),
-            shape = RoundedCornerShape(16.dp)
-        )
+            OutlinedTextField(
+                value = viewModel.password,
+                onValueChange = { viewModel.password = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .defaultMinSize(minHeight = 56.dp),
+                singleLine = true,
+                visualTransformation =
+                    if (viewModel.passwordVisible) VisualTransformation.None
+                    else PasswordVisualTransformation(),
+                placeholder = { Text("•••••••", color = SubTextDark, fontSize = 20.sp) },
+                textStyle = LocalTextStyle.current.copy(
+                    fontSize = 16.sp,
+                    color = Text
+                ),
+                trailingIcon = {
+                    IconButton(onClick = { viewModel.togglePasswordVisibility() }) {
+                        Icon(
+                            imageVector = if (viewModel.passwordVisible)
+                                Icons.Filled.Visibility
+                            else Icons.Filled.VisibilityOff,
+                            contentDescription = null,
+                            tint = SubTextDark
+                        )
+                    }
+                },
+                isError = viewModel.passwordError != null,
+                supportingText = {
+                    viewModel.passwordError?.let {
+                        Text(it, color = Color.Red)
+                    }
+                },
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Block,
+                    unfocusedContainerColor = Block,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    cursorColor = Accent
+                ),
+                shape = RoundedCornerShape(16.dp)
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
