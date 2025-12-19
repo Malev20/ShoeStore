@@ -1,7 +1,8 @@
 package com.example.shoestore.ui.screens
-import androidx.compose.foundation.border
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,11 +28,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.shoestore.data.model.Product
+import com.example.shoestore.R
 import com.example.shoestore.data.model.Category
+import com.example.shoestore.data.model.Product
 import com.example.shoestore.ui.components.ProductCard
 import com.example.shoestore.ui.theme.AppTypography
-import com.example.shoestore.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,10 +40,10 @@ fun HomeScreen(
     onProductClick: (Product) -> Unit,
     onCartClick: () -> Unit,
     onSearchClick: () -> Unit,
-    onSettingsClick: () -> Unit = {}
+    onSettingsClick: () -> Unit = {},
+    onCategoryClick: (String) -> Unit = {}
 ) {
     var selected by rememberSaveable { mutableIntStateOf(0) }
-
     var selectedCategory by remember { mutableStateOf("All") }
 
     val categories = listOf(
@@ -183,7 +184,7 @@ fun HomeScreen(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
-                .background(Color(0xFFF7F7F9)) // Здесь изменен фон на #F7F7F9
+                .background(Color(0xFFF7F7F9))
         ) {
             if (selected == 0) {
                 Column(
@@ -212,7 +213,7 @@ fun HomeScreen(
                         ) {
                             OutlinedTextField(
                                 value = "",
-                                onValueChange = {},
+                                onValueChange = { onSearchClick() },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(48.dp),
@@ -276,6 +277,11 @@ fun HomeScreen(
                                     selectedCategory = selectedCategory,
                                     onCategorySelected = { category ->
                                         selectedCategory = category
+                                    },
+                                    onCategoryClick = { name ->
+                                        if (name != "All") {
+                                            onCategoryClick(name)
+                                        }
                                     }
                                 )
                             }
@@ -284,7 +290,7 @@ fun HomeScreen(
                                 PopularSection(
                                     products = popularProducts,
                                     onProductClick = onProductClick,
-                                    onFavoriteClick = { product -> }
+                                    onFavoriteClick = { _ -> }
                                 )
                             }
 
@@ -293,6 +299,7 @@ fun HomeScreen(
                             }
                         }
                     }
+
                     1 -> {
                         Box(
                             modifier = Modifier.fillMaxSize(),
@@ -304,6 +311,7 @@ fun HomeScreen(
                             )
                         }
                     }
+
                     2 -> {
                         Box(
                             modifier = Modifier.fillMaxSize(),
@@ -315,6 +323,7 @@ fun HomeScreen(
                             )
                         }
                     }
+
                     3 -> {
                         ProfileScreen()
                     }
@@ -328,7 +337,8 @@ fun HomeScreen(
 private fun CategorySection(
     categories: List<Category>,
     selectedCategory: String,
-    onCategorySelected: (String) -> Unit
+    onCategorySelected: (String) -> Unit,
+    onCategoryClick: (String) -> Unit
 ) {
     Column {
         Text(
@@ -347,7 +357,10 @@ private fun CategorySection(
                 CategoryChip(
                     category = category.name,
                     isSelected = selectedCategory == category.name,
-                    onClick = { onCategorySelected(category.name) }
+                    onClick = {
+                        onCategorySelected(category.name)
+                        onCategoryClick(category.name)
+                    }
                 )
             }
         }
@@ -365,19 +378,19 @@ private fun CategoryChip(
             .width(108.dp)
             .height(40.dp)
             .shadow(
-                elevation = 2.dp, // Небольшая тень для контраста
+                elevation = 2.dp,
                 shape = RoundedCornerShape(16.dp),
                 clip = true
             )
             .clip(RoundedCornerShape(16.dp))
             .background(
                 if (isSelected) MaterialTheme.colorScheme.primary
-                else Color.White // Белый фон для невыбранных чипсов
+                else Color.White
             )
             .border(
                 width = if (isSelected) 0.dp else 1.dp,
                 color = if (isSelected) Color.Transparent
-                else Color(0xFFE0E0E0), // Светло-серая обводка
+                else Color(0xFFE0E0E0),
                 shape = RoundedCornerShape(16.dp)
             )
             .clickable { onClick() },
@@ -474,7 +487,6 @@ private fun PromotionsSection() {
     }
 }
 
-
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HomeScreenPreview() {
@@ -482,6 +494,7 @@ fun HomeScreenPreview() {
         onProductClick = {},
         onCartClick = {},
         onSearchClick = {},
-        onSettingsClick = {}
+        onSettingsClick = {},
+        onCategoryClick = {}
     )
 }
