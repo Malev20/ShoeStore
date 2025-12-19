@@ -12,9 +12,22 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,6 +56,8 @@ fun ProfileScreen(viewModel: ProfileViewModel = viewModel()) {
     }
 
     LaunchedEffect(Unit) { viewModel.loadProfile() }
+
+    var showLoyaltyDialog by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -157,6 +172,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = viewModel()) {
                             .width(300.dp)
                             .height(65.dp)
                             .background(Color(0xFFF8F8F8), RoundedCornerShape(8.dp))
+                            .clickable { showLoyaltyDialog = true }
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.str1),
@@ -246,10 +262,67 @@ fun ProfileScreen(viewModel: ProfileViewModel = viewModel()) {
                 text = { Text(uiState.message) }
             )
         }
+
+        // Loyalty dialog
+        if (showLoyaltyDialog) {
+            AlertDialog(
+                onDismissRequest = { showLoyaltyDialog = false },
+                containerColor = Color.White,
+                shape = RoundedCornerShape(20.dp),
+                title = {},
+                text = {
+                    // только картинка, без лишних отступов
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(420.dp),        // диалог стал больше по высоте
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .fillMaxHeight()
+                                .padding(horizontal = 8.dp) // чуть‑чуть, чтобы не прилипала к краю
+                                .clip(RoundedCornerShape(16.dp)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.str1),
+                                contentDescription = stringResource(R.string.loyalty_card),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .fillMaxHeight()
+                                    .rotate(90f),      // или -90f, если нужно в другую сторону
+                                contentScale = ContentScale.Fit   // крупно, но без обрезания
+                            )
+                        }
+                    }
+                },
+                confirmButton = {
+                    // только одна кнопка снизу на всю ширину
+                    Button(
+                        onClick = { showLoyaltyDialog = false },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF48B2E7)
+                        ),
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp, vertical = 8.dp)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.cancel),
+                            color = Color.White
+                        )
+                    }
+                }
+            )
+        }
+
+
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditableField(
     label: String,
@@ -269,7 +342,7 @@ fun EditableField(
                 onValueChange = onValueChange,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .shadow(4.dp, RoundedCornerShape(12.dp))      // лёгкая тень
+                    .shadow(4.dp, RoundedCornerShape(12.dp))
                     .background(Color.White, RoundedCornerShape(12.dp)),
                 shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -284,7 +357,7 @@ fun EditableField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)
-                    .shadow(4.dp, RoundedCornerShape(12.dp))      // та же тень
+                    .shadow(4.dp, RoundedCornerShape(12.dp))
                     .background(Color(0xFFF7F7F9), RoundedCornerShape(12.dp))
                     .padding(horizontal = 16.dp),
                 contentAlignment = Alignment.CenterStart

@@ -85,6 +85,33 @@ fun HomeScreen(
         ),
         Product(
             id = "4",
+            name = "Adidas Ultraboost",
+            price = "₽680.00",
+            originalPrice = "₽750.00",
+            category = "NEW",
+            imageResId = R.drawable
+                .nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
+        ),
+        Product(
+            id = "5",
+            name = "Adidas Ultraboost",
+            price = "₽680.00",
+            originalPrice = "₽750.00",
+            category = "NEW",
+            imageResId = R.drawable
+                .nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
+        ),
+        Product(
+            id = "6",
+            name = "Adidas Ultraboost",
+            price = "₽680.00",
+            originalPrice = "₽750.00",
+            category = "NEW",
+            imageResId = R.drawable
+                .nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
+        ),
+        Product(
+            id = "7",
             name = "Puma RS-X",
             price = "₽520.00",
             originalPrice = "₽600.00",

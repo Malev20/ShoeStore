@@ -1,8 +1,6 @@
 package com.example.shoestore.ui.screens
-import androidx.compose.ui.res.painterResource
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -10,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -66,8 +65,13 @@ fun ForgotPasswordScreen(
 
         OutlinedTextField(
             value = email,
-            onValueChange = { email = it; viewModel.resetState() },
-            placeholder = { Text("xyz@gmail.com") },
+            onValueChange = {
+                email = it
+                viewModel.resetState()
+            },
+            placeholder = {
+                Text(text = stringResource(id = R.string.email))
+            },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -113,10 +117,9 @@ fun ForgotPasswordScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    // 🔵 СИНИЙ КРУЖОК С ИКОНКОЙ
                     Box(
                         modifier = Modifier
-                            .size(88.dp) // диаметр = 44dp * 2
+                            .size(88.dp)
                             .background(
                                 color = Accent,
                                 shape = RoundedCornerShape(44.dp)
@@ -133,7 +136,6 @@ fun ForgotPasswordScreen(
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    // Заголовок
                     Text(
                         text = stringResource(id = R.string.check_your_email),
                         style = AppTypography.bodyMedium16,
@@ -142,7 +144,6 @@ fun ForgotPasswordScreen(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Описание
                     Text(
                         text = stringResource(id = R.string.recovery_code_sent),
                         style = AppTypography.bodyRegular14,
@@ -152,7 +153,6 @@ fun ForgotPasswordScreen(
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    // Кнопка
                     Button(
                         onClick = {
                             showDialog = false
@@ -162,11 +162,13 @@ fun ForgotPasswordScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = Accent),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("OK", color = Color.White)
+                        Text(
+                            text = stringResource(id = R.string.ok),
+                            color = Color.White
+                        )
                     }
                 }
             }
         }
     }
-
 }
