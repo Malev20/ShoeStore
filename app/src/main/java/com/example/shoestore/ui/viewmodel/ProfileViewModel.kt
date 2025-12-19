@@ -20,7 +20,6 @@ sealed class ProfileUiState {
 class ProfileViewModel : ViewModel() {
     private val API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml0eWVrZ3hkenpjeGFxbmx0YWhsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5Mzc3MjIsImV4cCI6MjA4MTUxMzcyMn0.n1eH9oxnuGpqHhvY01WkZghVTz8iyFfmEQoCUJHiHy0"
     private val AUTH_TOKEN = "Bearer $API_KEY"
-    // В реальном приложении ID берется из Auth-сессии. Пока для теста:
     private val USER_ID_FILTER = "eq.89af550a-ddc0-4314-9f78-b6aef9f65778"
 
     var uiState by mutableStateOf<ProfileUiState>(ProfileUiState.Idle)
@@ -28,7 +27,6 @@ class ProfileViewModel : ViewModel() {
 
     var isEditing by mutableStateOf(false)
 
-    // Данные профиля
     var name by mutableStateOf("")
     var lastName by mutableStateOf("")
     var address by mutableStateOf("")
@@ -59,7 +57,6 @@ class ProfileViewModel : ViewModel() {
             uiState = ProfileUiState.Loading
             try {
                 val profile = UserProfile(name, lastName, address, phone)
-                // Передаем USER_ID_FILTER, чтобы Supabase знал, КТО обновляется
                 val response = RetrofitClient.apiService.updateProfile(
                     API_KEY, AUTH_TOKEN, USER_ID_FILTER, profile
                 )
@@ -77,7 +74,6 @@ class ProfileViewModel : ViewModel() {
 
     fun onPhotoCaptured(bitmap: Bitmap) {
         bitmapPhoto = bitmap
-        // Тут можно добавить логику отправки фото в Storage Supabase
     }
 
     fun dismissError() { uiState = ProfileUiState.Success }

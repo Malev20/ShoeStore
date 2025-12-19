@@ -23,7 +23,7 @@ import com.example.shoestore.R
 fun BackButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = colorResource(id = R.color.background)
+    backgroundColor: Color = Color.White
 ) {
     Box(
         modifier = modifier

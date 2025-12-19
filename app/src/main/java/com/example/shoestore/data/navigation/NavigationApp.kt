@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.shoestore.ui.screens.* // Импортируем все экраны
+import com.example.shoestore.ui.screens.*
 
 @Composable
 fun NavigationApp(navController: NavHostController) {
@@ -15,7 +15,6 @@ fun NavigationApp(navController: NavHostController) {
         composable("start_menu") {
             OnboardScreen(
                 onGetStartedClick = {
-                    // ИЗМЕНЕНИЕ: перенаправляем на sign_in вместо sign_up
                     navController.navigate("sign_in")
                 },
             )
@@ -34,7 +33,6 @@ fun NavigationApp(navController: NavHostController) {
                 onSignUpClick = { navController.navigate("sign_up") },
                 onSignInClick = {
                     navController.navigate("home") {
-                        // Очищаем стек, чтобы нельзя было вернуться на экран входа
                         popUpTo("sign_in") { inclusive = true }
                     }
                 }
@@ -74,22 +72,40 @@ fun NavigationApp(navController: NavHostController) {
             )
         }
 
-        // ЭКРАН HOME (Пункт 9)
         composable("home") {
             HomeScreen(
-                onProductClick = { product ->
-                    // Здесь будет переход на детали товара: navController.navigate("details/${product.id}")
-                },
-                onCartClick = { /* Переход в корзину */ },
-                onSearchClick = { /* Логика поиска */ },
-                onSettingsClick = {
-                    // Переход в профиль (связываем меню с экраном профиля)
-                    navController.navigate("profile")
+                onProductClick = {},
+                onCartClick = {},
+                onSearchClick = {},
+                onSettingsClick = {},
+                onCategoryClick = { categoryName ->
+                    if (categoryName != "All") {
+                        navController.navigate("category/$categoryName")
+                    }
                 }
             )
         }
 
-        // ЭКРАН PROFILE (Пункт 12)
+
+        composable("category/{categoryName}") { backStackEntry ->
+            val categoryName = backStackEntry.arguments?.getString("categoryName") ?: "Category"
+
+            CategoryScreen(
+                categoryName = categoryName,
+                onBackClick = { navController.popBackStack() },
+                onProductClick = { /* TODO */ },
+                onFavoriteClick = { /* TODO */ },
+                isFavorite = { false },
+                onAllClick = {
+                    navController.popBackStack(route = "home", inclusive = false)
+                }
+            )
+        }
+
+
+
+
+        // PROFILE
         composable("profile") {
             ProfileScreen()
         }

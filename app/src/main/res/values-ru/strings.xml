@@ -73,6 +73,10 @@
     <string name="create">Создать пользователя</string>
     <string name="cancel">Отмена</string>
     <string name="verify">Подтвердить Email</string>
+    <string name="save_changes">Сохранить изенения</string>
+    <string name="error">Ошибка</string>
+    <string name="ok">ОК</string>
+
 </resources>
 
 

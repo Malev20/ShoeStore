@@ -1,5 +1,5 @@
 package com.example.shoestore.ui.screens
-import androidx.compose.foundation.border
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,17 +21,17 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.shoestore.data.model.Product
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.shoestore.R
 import com.example.shoestore.data.model.Category
+import com.example.shoestore.data.model.Product
+import com.example.shoestore.ui.HomeViewModel
 import com.example.shoestore.ui.components.ProductCard
 import com.example.shoestore.ui.theme.AppTypography
-import com.example.shoestore.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,287 +39,350 @@ fun HomeScreen(
     onProductClick: (Product) -> Unit,
     onCartClick: () -> Unit,
     onSearchClick: () -> Unit,
-    onSettingsClick: () -> Unit = {}
+    onSettingsClick: () -> Unit = {},
+    onCategoryClick: (String) -> Unit = {},
+    viewModel: HomeViewModel = viewModel()
 ) {
+    // 0 = Home, 1 = Favourite, 2 = Notifications, 3 = Profile
     var selected by rememberSaveable { mutableIntStateOf(0) }
-
     var selectedCategory by remember { mutableStateOf("All") }
 
     val categories = listOf(
         Category("All", isSelected = true),
-        Category("Outdoor", isSelected = false),
-        Category("Tennis", isSelected = false),
-        Category("Running", isSelected = false),
-        Category("Casual", isSelected = false)
+        Category("Outdoor"),
+        Category("Tennis"),
+        Category("Running"),
+        Category("Casual")
     )
 
     val popularProducts = listOf(
         Product(
             id = "1",
             name = "Nike Air Max",
-            price = "P752.00",
-            originalPrice = "P850.00",
+            price = "₽752.00",
+            originalPrice = "₽850.00",
             category = "BEST SELLER",
-            imageUrl = "",
-            imageResId = R.drawable.nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
+            imageResId = R.drawable
+                .nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
         ),
         Product(
             id = "2",
             name = "Nike Air Force 1",
-            price = "P820.00",
-            originalPrice = "P900.00",
+            price = "₽820.00",
+            originalPrice = "₽900.00",
             category = "BEST SELLER",
-            imageUrl = "",
-            imageResId = R.drawable.nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
+            imageResId = R.drawable
+                .nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
         ),
         Product(
             id = "3",
             name = "Adidas Ultraboost",
-            price = "P680.00",
-            originalPrice = "P750.00",
+            price = "₽680.00",
+            originalPrice = "₽750.00",
             category = "NEW",
-            imageUrl = "",
-            imageResId = R.drawable.nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
+            imageResId = R.drawable
+                .nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
         ),
         Product(
             id = "4",
+            name = "Adidas Ultraboost",
+            price = "₽680.00",
+            originalPrice = "₽750.00",
+            category = "NEW",
+            imageResId = R.drawable
+                .nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
+        ),
+        Product(
+            id = "5",
+            name = "Adidas Ultraboost",
+            price = "₽680.00",
+            originalPrice = "₽750.00",
+            category = "NEW",
+            imageResId = R.drawable
+                .nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
+        ),
+        Product(
+            id = "6",
+            name = "Adidas Ultraboost",
+            price = "₽680.00",
+            originalPrice = "₽750.00",
+            category = "NEW",
+            imageResId = R.drawable
+                .nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
+        ),
+        Product(
+            id = "7",
             name = "Puma RS-X",
-            price = "P520.00",
-            originalPrice = "P600.00",
+            price = "₽520.00",
+            originalPrice = "₽600.00",
             category = "TRENDING",
-            imageUrl = "",
-            imageResId = R.drawable.nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
+            imageResId = R.drawable
+                .nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
         )
     )
 
+    LaunchedEffect(Unit) {
+        viewModel.setProducts(popularProducts)
+    }
+
     Scaffold(
         bottomBar = {
-            Box(
-                modifier = Modifier
-                    .height(80.dp)
-                    .fillMaxWidth()
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.vector_1789),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.matchParentSize()
-                )
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(80.dp)
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row {
-                        IconButton(onClick = { selected = 0 }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.home),
-                                contentDescription = "Home",
-                                tint = if (selected == 0) MaterialTheme.colorScheme.primary else Color.Black
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.width(8.dp))
-
-                        IconButton(onClick = { selected = 1 }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.favorite),
-                                contentDescription = "Favorites",
-                                tint = if (selected == 1) MaterialTheme.colorScheme.primary else Color.Black
-                            )
-                        }
-                    }
-
-                    Box(
-                        modifier = Modifier
-                            .offset(y = (-20).dp)
-                            .size(56.dp)
-                            .clip(CircleShape),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        FloatingActionButton(
-                            onClick = { onCartClick() },
-                            modifier = Modifier.size(56.dp),
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary,
-                            shape = CircleShape
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.bag_2),
-                                contentDescription = "Cart",
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                    }
-
-                    Row {
-                        IconButton(onClick = { selected = 2 }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.orders),
-                                contentDescription = "Notification",
-                                tint = if (selected == 2) MaterialTheme.colorScheme.primary else Color.Black
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.width(8.dp))
-
-                        IconButton(onClick = { selected = 3 }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.profile),
-                                contentDescription = "Profile",
-                                tint = if (selected == 3) MaterialTheme.colorScheme.primary else Color.Black
-                            )
-                        }
-                    }
-                }
-            }
+            BottomBar(
+                selected = selected,
+                onSelectedChange = { selected = it },
+                onCartClick = onCartClick
+            )
         }
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
-                .background(Color(0xFFF7F7F9)) // Здесь изменен фон на #F7F7F9
+                .background(Color(0xFFF7F7F9))
         ) {
             if (selected == 0) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.home),
-                        style = AppTypography.headingRegular32,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 12.dp),
-                        textAlign = TextAlign.Center
-                    )
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(48.dp)
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(Color.White)
-                        ) {
-                            OutlinedTextField(
-                                value = "",
-                                onValueChange = {},
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(48.dp),
-                                placeholder = {
-                                    Text(
-                                        text = stringResource(R.string.search),
-                                        style = AppTypography.bodyRegular14
-                                    )
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Default.Search,
-                                        contentDescription = "Search",
-                                        tint = Color.Gray
-                                    )
-                                },
-                                shape = RoundedCornerShape(12.dp),
-                                colors = OutlinedTextFieldDefaults.colors(
-                                    focusedBorderColor = Color.Gray,
-                                    unfocusedBorderColor = Color.LightGray,
-                                    focusedContainerColor = Color.White,
-                                    unfocusedContainerColor = Color.White
-                                )
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.width(12.dp))
-
-                        Box(
-                            modifier = Modifier
-                                .size(48.dp)
-                                .clip(CircleShape)
-                                .background(MaterialTheme.colorScheme.primary)
-                                .clickable { onSettingsClick() },
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.sliders),
-                                contentDescription = "Settings",
-                                tint = Color.White,
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                    }
-                }
+                HomeTopBar(onSearchClick = onSearchClick, onSettingsClick = onSettingsClick)
             }
 
             Box(
                 modifier = Modifier.fillMaxSize()
             ) {
                 when (selected) {
-                    0 -> {
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.spacedBy(24.dp),
-                            contentPadding = PaddingValues(16.dp)
-                        ) {
-                            item {
-                                CategorySection(
-                                    categories = categories,
-                                    selectedCategory = selectedCategory,
-                                    onCategorySelected = { category ->
-                                        selectedCategory = category
-                                    }
-                                )
-                            }
+                    0 -> HomeContent(
+                        categories = categories,
+                        selectedCategory = selectedCategory,
+                        onCategorySelected = { selectedCategory = it },
+                        onCategoryClick = onCategoryClick,
+                        products = popularProducts,
+                        onProductClick = onProductClick,
+                        onFavoriteClick = { p -> viewModel.toggleFavorite(p) },
+                        isFavorite = { p -> viewModel.isFavorite(p) }
+                    )
 
-                            item {
-                                PopularSection(
-                                    products = popularProducts,
-                                    onProductClick = onProductClick,
-                                    onFavoriteClick = { product -> }
-                                )
-                            }
+                    1 -> FavoriteScreen(
+                        products = viewModel.favoriteProducts(),
+                        isFavorite = { p -> viewModel.isFavorite(p) },
+                        onProductClick = onProductClick,
+                        onFavoriteClick = { p -> viewModel.toggleFavorite(p) }
+                    )
 
-                            item {
-                                PromotionsSection()
-                            }
-                        }
-                    }
-                    1 -> {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = stringResource(R.string.favourite),
-                                style = AppTypography.headingRegular32
-                            )
-                        }
-                    }
-                    2 -> {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = stringResource(R.string.notifications),
-                                style = AppTypography.headingRegular32
-                            )
-                        }
-                    }
+                    2 -> CenterTextScreen("Notifications")
                     3 -> {
                         ProfileScreen()
                     }
+
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun BottomBar(
+    selected: Int,
+    onSelectedChange: (Int) -> Unit,
+    onCartClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .height(80.dp)
+            .fillMaxWidth()
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.vector_1789),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.matchParentSize()
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp)
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row {
+                IconButton(onClick = { onSelectedChange(0) }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.home),
+                        contentDescription = "Home",
+                        tint = if (selected == 0) MaterialTheme.colorScheme.primary else Color.Black
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                IconButton(onClick = { onSelectedChange(1) }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.favorite),
+                        contentDescription = "Favorites",
+                        tint = if (selected == 1) MaterialTheme.colorScheme.primary else Color.Black
+                    )
+                }
+            }
+
+            Box(
+                modifier = Modifier
+                    .offset(y = (-20).dp)
+                    .size(56.dp)
+                    .clip(CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                FloatingActionButton(
+                    onClick = onCartClick,
+                    modifier = Modifier.size(56.dp),
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    shape = CircleShape
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.bag_2),
+                        contentDescription = "Cart",
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            }
+
+            Row {
+                IconButton(onClick = { onSelectedChange(2) }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.orders),
+                        contentDescription = "Notification",
+                        tint = if (selected == 2) MaterialTheme.colorScheme.primary else Color.Black
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                IconButton(onClick = { onSelectedChange(3) }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.profile),
+                        contentDescription = "Profile",
+                        tint = if (selected == 3) MaterialTheme.colorScheme.primary else Color.Black
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun HomeTopBar(
+    onSearchClick: () -> Unit,
+    onSettingsClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        Text(
+            text = "Home",
+            style = AppTypography.headingRegular32,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 12.dp),
+            textAlign = TextAlign.Center
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(48.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color.White)
+            ) {
+                OutlinedTextField(
+                    value = "",
+                    onValueChange = { onSearchClick() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    placeholder = {
+                        Text(
+                            text = "Search",
+                            style = AppTypography.bodyRegular14
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "Search",
+                            tint = Color.Gray
+                        )
+                    },
+                    shape = RoundedCornerShape(12.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color.Gray,
+                        unfocusedBorderColor = Color.LightGray,
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White
+                    )
+                )
+            }
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primary)
+                    .clickable { onSettingsClick() },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.sliders),
+                    contentDescription = "Settings",
+                    tint = Color.White,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun HomeContent(
+    categories: List<Category>,
+    selectedCategory: String,
+    onCategorySelected: (String) -> Unit,
+    onCategoryClick: (String) -> Unit,
+    products: List<Product>,
+    onProductClick: (Product) -> Unit,
+    onFavoriteClick: (Product) -> Unit,
+    isFavorite: (Product) -> Boolean
+) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(24.dp),
+        contentPadding = PaddingValues(16.dp)
+    ) {
+        item {
+            CategorySection(
+                categories = categories,
+                selectedCategory = selectedCategory,
+                onCategorySelected = onCategorySelected,
+                onCategoryClick = onCategoryClick
+            )
+        }
+
+        item {
+            PopularSection(
+                products = products,
+                onProductClick = onProductClick,
+                onFavoriteClick = onFavoriteClick,
+                isFavorite = isFavorite
+            )
+        }
+
+        item {
+            PromotionsSection()
         }
     }
 }
@@ -328,11 +391,12 @@ fun HomeScreen(
 private fun CategorySection(
     categories: List<Category>,
     selectedCategory: String,
-    onCategorySelected: (String) -> Unit
+    onCategorySelected: (String) -> Unit,
+    onCategoryClick: (String) -> Unit
 ) {
     Column {
         Text(
-            text = stringResource(id = R.string.categories),
+            text = "Categories",
             style = AppTypography.bodyMedium16.copy(
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 18.sp
@@ -347,7 +411,10 @@ private fun CategorySection(
                 CategoryChip(
                     category = category.name,
                     isSelected = selectedCategory == category.name,
-                    onClick = { onCategorySelected(category.name) }
+                    onClick = {
+                        onCategorySelected(category.name)
+                        onCategoryClick(category.name)
+                    }
                 )
             }
         }
@@ -365,20 +432,14 @@ private fun CategoryChip(
             .width(108.dp)
             .height(40.dp)
             .shadow(
-                elevation = 2.dp, // Небольшая тень для контраста
+                elevation = 2.dp,
                 shape = RoundedCornerShape(16.dp),
                 clip = true
             )
             .clip(RoundedCornerShape(16.dp))
             .background(
                 if (isSelected) MaterialTheme.colorScheme.primary
-                else Color.White // Белый фон для невыбранных чипсов
-            )
-            .border(
-                width = if (isSelected) 0.dp else 1.dp,
-                color = if (isSelected) Color.Transparent
-                else Color(0xFFE0E0E0), // Светло-серая обводка
-                shape = RoundedCornerShape(16.dp)
+                else Color.White
             )
             .clickable { onClick() },
         contentAlignment = Alignment.Center
@@ -399,7 +460,8 @@ private fun CategoryChip(
 private fun PopularSection(
     products: List<Product>,
     onProductClick: (Product) -> Unit,
-    onFavoriteClick: (Product) -> Unit
+    onFavoriteClick: (Product) -> Unit,
+    isFavorite: (Product) -> Boolean
 ) {
     Column {
         Row(
@@ -408,20 +470,19 @@ private fun PopularSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(id = R.string.popular),
+                text = "Popular",
                 style = AppTypography.bodyMedium16.copy(
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 18.sp
                 )
             )
             Text(
-                text = stringResource(R.string.all),
+                text = "All",
                 style = AppTypography.bodyRegular12.copy(
                     fontWeight = FontWeight.Medium,
                     fontSize = 14.sp
                 ),
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.clickable { }
+                color = MaterialTheme.colorScheme.primary
             )
         }
 
@@ -433,6 +494,7 @@ private fun PopularSection(
             items(products) { product ->
                 ProductCard(
                     product = product,
+                    isFavorite = isFavorite(product),
                     onProductClick = { onProductClick(product) },
                     onFavoriteClick = { onFavoriteClick(product) }
                 )
@@ -445,7 +507,7 @@ private fun PopularSection(
 private fun PromotionsSection() {
     Column {
         Text(
-            text = stringResource(R.string.sales),
+            text = "Sales",
             style = AppTypography.bodyMedium16.copy(
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 18.sp
@@ -474,14 +536,15 @@ private fun PromotionsSection() {
     }
 }
 
-
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun HomeScreenPreview() {
-    HomeScreen(
-        onProductClick = {},
-        onCartClick = {},
-        onSearchClick = {},
-        onSettingsClick = {}
-    )
+private fun CenterTextScreen(text: String) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            style = AppTypography.headingRegular32
+        )
+    }
 }
