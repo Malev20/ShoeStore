@@ -31,8 +31,10 @@ fun CategoryScreen(
     onBackClick: () -> Unit,
     onProductClick: (Product) -> Unit,
     onFavoriteClick: (Product) -> Unit,
+    isFavorite: (Product) -> Boolean,   // <‑‑ ДОБАВИЛИ
     onAllClick: () -> Unit = {}
-) {
+)
+ {
     // Чипсы сверху
     val categories = listOf(
         Category("All", isSelected = false),
@@ -132,11 +134,13 @@ fun CategoryScreen(
                 items(categoryProducts) { product ->
                     ProductCard(
                         product = product,
+                        isFavorite = isFavorite(product),          // <‑‑ ДОБАВИЛИ
                         onProductClick = { onProductClick(product) },
                         onFavoriteClick = { onFavoriteClick(product) }
                     )
                 }
             }
+
         }
     }
 }

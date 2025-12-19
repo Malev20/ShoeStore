@@ -97,12 +97,13 @@ fun NavigationApp(navController: NavHostController) {
                 onBackClick = { navController.popBackStack() },
                 onProductClick = { /* TODO */ },
                 onFavoriteClick = { /* TODO */ },
+                isFavorite = { false },   // ВРЕМЕННО, пока не подключишь ViewModel
                 onAllClick = {
-                    // возвращаемся на home при выборе All
                     navController.popBackStack(route = "home", inclusive = false)
                 }
             )
         }
+
 
 
 

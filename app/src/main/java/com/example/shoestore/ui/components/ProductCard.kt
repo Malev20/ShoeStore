@@ -1,3 +1,4 @@
+// com/example/shoestore/ui/components/ProductCard.kt
 package com.example.shoestore.ui.components
 
 import androidx.compose.foundation.Image
@@ -9,7 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,11 +25,10 @@ import com.example.shoestore.ui.theme.AppTypography
 @Composable
 fun ProductCard(
     product: Product,
+    isFavorite: Boolean,
     onProductClick: () -> Unit,
     onFavoriteClick: () -> Unit
 ) {
-    var isFavorite by remember { mutableStateOf(false) }
-
     Card(
         modifier = Modifier
             .width(160.dp)
@@ -64,10 +64,7 @@ fun ProductCard(
 
                 // ===== СЕРДЕЧКО =====
                 IconButton(
-                    onClick = {
-                        isFavorite = !isFavorite
-                        onFavoriteClick()
-                    },
+                    onClick = onFavoriteClick,
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .padding(8.dp)
@@ -119,9 +116,9 @@ fun ProductCard(
                         .size(36.dp)
                         .background(
                             color = Color(0xFF4CB6E8),
-                            shape = LeafButtonShape()
+                            shape = LeafButtonShape() // твоя форма
                         )
-                        .clickable { /* add to cart */ },
+                        .clickable { /* TODO: add to cart */ },
                     contentAlignment = Alignment.Center
                 ) {
 
@@ -159,8 +156,10 @@ fun ProductCardPreview() {
             originalPrice = "₽850.00",
             category = "BEST SELLER",
             imageUrl = "",
-            imageResId = null
+            imageResId = R.drawable
+                .nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
         ),
+        isFavorite = false,
         onProductClick = {},
         onFavoriteClick = {}
     )
