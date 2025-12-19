@@ -328,7 +328,7 @@ fun RegisterAccountScreen(
             Text(
                 text = stringResource(id = R.string.agree),
                 style = AppTypography.bodyRegular14.copy(
-                    textDecoration = TextDecoration.Underline // Добавляем подчеркивание
+                    textDecoration = TextDecoration.Underline
                 ),
                 color = hintColor,
                 modifier = Modifier.weight(1f)

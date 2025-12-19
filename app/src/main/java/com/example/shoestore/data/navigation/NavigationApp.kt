@@ -72,14 +72,12 @@ fun NavigationApp(navController: NavHostController) {
             )
         }
 
-        // HOME
-        // HOME
         composable("home") {
             HomeScreen(
-                onProductClick = { /* ... */ },
-                onCartClick = { /* ... */ },
-                onSearchClick = { /* ... */ },
-                onSettingsClick = { /* больше НЕ navigate("profile") */ },
+                onProductClick = {},
+                onCartClick = {},
+                onSearchClick = {},
+                onSettingsClick = {},
                 onCategoryClick = { categoryName ->
                     if (categoryName != "All") {
                         navController.navigate("category/$categoryName")
@@ -97,7 +95,7 @@ fun NavigationApp(navController: NavHostController) {
                 onBackClick = { navController.popBackStack() },
                 onProductClick = { /* TODO */ },
                 onFavoriteClick = { /* TODO */ },
-                isFavorite = { false },   // ВРЕМЕННО, пока не подключишь ViewModel
+                isFavorite = { false },
                 onAllClick = {
                     navController.popBackStack(route = "home", inclusive = false)
                 }

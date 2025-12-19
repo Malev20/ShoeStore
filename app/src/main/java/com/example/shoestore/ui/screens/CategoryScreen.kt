@@ -31,11 +31,10 @@ fun CategoryScreen(
     onBackClick: () -> Unit,
     onProductClick: (Product) -> Unit,
     onFavoriteClick: (Product) -> Unit,
-    isFavorite: (Product) -> Boolean,   // <‑‑ ДОБАВИЛИ
+    isFavorite: (Product) -> Boolean,
     onAllClick: () -> Unit = {}
 )
  {
-    // Чипсы сверху
     val categories = listOf(
         Category("All", isSelected = false),
         Category("Outdoor", isSelected = false),
@@ -43,20 +42,17 @@ fun CategoryScreen(
         Category("Running", isSelected = false)
     )
 
-    // Текущая выбранная категория на экране
     var selectedCategory by remember { mutableStateOf(categoryName) }
 
-    // Функция, которая по выбранной категории даёт нужный drawable
     fun imageResFor(category: String): Int {
         return when (category) {
-            "Tennis" -> R.drawable.tennis        // твой ресурс для тенниса
-            "Running" -> R.drawable.running      // твой ресурс для раннинга
+            "Tennis" -> R.drawable.tennis
+            "Running" -> R.drawable.running
             else -> R.drawable
                 .nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
         }
     }
 
-    // Список продуктов пересчитывается при смене selectedCategory
     val categoryProducts = remember(selectedCategory) {
         val resId = imageResFor(selectedCategory)
         List(16) { index ->
@@ -77,7 +73,7 @@ fun CategoryScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = selectedCategory, // показываем текущую категорию
+                        text = selectedCategory,
                         style = AppTypography.headingRegular32.copy(
                             fontSize = 24.sp,
                             fontWeight = FontWeight.SemiBold
@@ -106,13 +102,12 @@ fun CategoryScreen(
                 .fillMaxSize()
                 .background(Color(0xFFF7F7F9))
         ) {
-            // Чипсы категорий
             CategoryChipsRow(
                 categories = categories,
                 selectedCategory = selectedCategory,
                 onCategorySelected = { name ->
                     if (name == "All") {
-                        onAllClick()         // возвращаемся на Home
+                        onAllClick()
                     } else {
                         selectedCategory = name
                     }
@@ -121,7 +116,6 @@ fun CategoryScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Сетка товаров, скроллится сама
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 modifier = Modifier
@@ -134,7 +128,7 @@ fun CategoryScreen(
                 items(categoryProducts) { product ->
                     ProductCard(
                         product = product,
-                        isFavorite = isFavorite(product),          // <‑‑ ДОБАВИЛИ
+                        isFavorite = isFavorite(product),
                         onProductClick = { onProductClick(product) },
                         onFavoriteClick = { onFavoriteClick(product) }
                     )

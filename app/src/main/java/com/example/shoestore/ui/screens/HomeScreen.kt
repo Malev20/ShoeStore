@@ -121,7 +121,6 @@ fun HomeScreen(
         )
     )
 
-    // один раз кладём список во ViewModel
     LaunchedEffect(Unit) {
         viewModel.setProducts(popularProducts)
     }
@@ -177,8 +176,6 @@ fun HomeScreen(
         }
     }
 }
-
-/* ----------------- Вспомогательные composable ----------------- */
 
 @Composable
 private fun BottomBar(

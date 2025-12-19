@@ -31,7 +31,6 @@ fun VerificationScreen(
     var otpValue by remember { mutableStateOf("") }
     val state by viewModel.state.collectAsState()
 
-    // Таймер
     var timeLeft by remember { mutableIntStateOf(30) }
 
     LaunchedEffect(Unit) {
@@ -91,7 +90,6 @@ fun VerificationScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 🔹 ОДНО поле ввода
         OutlinedTextField(
             value = otpValue,
             onValueChange = {
@@ -121,7 +119,6 @@ fun VerificationScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        // Таймер
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween

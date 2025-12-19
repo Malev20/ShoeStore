@@ -7,7 +7,6 @@ import com.example.shoestore.data.model.Product
 
 class HomeViewModel : ViewModel() {
 
-    // список всех товаров, которые показываем на Home
     var allProducts: List<Product> = emptyList()
 
     private val _favoriteIds = mutableStateListOf<String>()

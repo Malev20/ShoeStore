@@ -39,7 +39,6 @@ fun ProductCard(
     ) {
         Column {
 
-            // ===== КАРТИНКА =====
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -62,7 +61,6 @@ fun ProductCard(
                     )
                 }
 
-                // ===== СЕРДЕЧКО =====
                 IconButton(
                     onClick = onFavoriteClick,
                     modifier = Modifier
@@ -80,7 +78,6 @@ fun ProductCard(
                 }
             }
 
-            // ===== НИЖНЯЯ ЧАСТЬ =====
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -108,7 +105,6 @@ fun ProductCard(
                     )
                 }
 
-                // ===== КНОПКА ЛИСТОЧЕК =====
                 Box(
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
@@ -116,7 +112,7 @@ fun ProductCard(
                         .size(36.dp)
                         .background(
                             color = Color(0xFF4CB6E8),
-                            shape = LeafButtonShape() // твоя форма
+                            shape = LeafButtonShape()
                         )
                         .clickable { /* TODO: add to cart */ },
                     contentAlignment = Alignment.Center

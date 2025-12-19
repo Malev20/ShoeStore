@@ -66,7 +66,6 @@ fun ProfileScreen(viewModel: ProfileViewModel = viewModel()) {
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
-            // Header
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
@@ -95,7 +94,6 @@ fun ProfileScreen(viewModel: ProfileViewModel = viewModel()) {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Avatar
             Box(
                 modifier = Modifier
                     .size(120.dp)
@@ -124,7 +122,6 @@ fun ProfileScreen(viewModel: ProfileViewModel = viewModel()) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Name
             Text(
                 text = "${viewModel.name} ${viewModel.lastName}",
                 style = MaterialTheme.typography.titleLarge,
@@ -133,7 +130,6 @@ fun ProfileScreen(viewModel: ProfileViewModel = viewModel()) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Loyalty card block
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -186,7 +182,6 @@ fun ProfileScreen(viewModel: ProfileViewModel = viewModel()) {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Editable fields
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
@@ -237,7 +232,6 @@ fun ProfileScreen(viewModel: ProfileViewModel = viewModel()) {
             }
         }
 
-        // Loading state
         if (uiState is ProfileUiState.Loading) {
             Box(
                 modifier = Modifier
@@ -249,7 +243,6 @@ fun ProfileScreen(viewModel: ProfileViewModel = viewModel()) {
             }
         }
 
-        // Error state
         if (uiState is ProfileUiState.Error) {
             AlertDialog(
                 onDismissRequest = { viewModel.dismissError() },
@@ -263,7 +256,6 @@ fun ProfileScreen(viewModel: ProfileViewModel = viewModel()) {
             )
         }
 
-        // Loyalty dialog
         if (showLoyaltyDialog) {
             AlertDialog(
                 onDismissRequest = { showLoyaltyDialog = false },
@@ -271,18 +263,17 @@ fun ProfileScreen(viewModel: ProfileViewModel = viewModel()) {
                 shape = RoundedCornerShape(20.dp),
                 title = {},
                 text = {
-                    // только картинка, без лишних отступов
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(420.dp),        // диалог стал больше по высоте
+                            .height(420.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .fillMaxHeight()
-                                .padding(horizontal = 8.dp) // чуть‑чуть, чтобы не прилипала к краю
+                                .padding(horizontal = 8.dp)
                                 .clip(RoundedCornerShape(16.dp)),
                             contentAlignment = Alignment.Center
                         ) {
@@ -292,14 +283,13 @@ fun ProfileScreen(viewModel: ProfileViewModel = viewModel()) {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .fillMaxHeight()
-                                    .rotate(90f),      // или -90f, если нужно в другую сторону
-                                contentScale = ContentScale.Fit   // крупно, но без обрезания
+                                    .rotate(90f),
+                                contentScale = ContentScale.Fit
                             )
                         }
                     }
                 },
                 confirmButton = {
-                    // только одна кнопка снизу на всю ширину
                     Button(
                         onClick = { showLoyaltyDialog = false },
                         colors = ButtonDefaults.buttonColors(
