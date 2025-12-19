@@ -1,7 +1,7 @@
 package com.example.shoestore.ui.screens
-import androidx.compose.foundation.clickable
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -15,9 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.font.FontWeight
 import com.example.shoestore.R
 import com.example.shoestore.data.model.Category
 import com.example.shoestore.data.model.Product
@@ -31,29 +31,43 @@ fun CategoryScreen(
     onBackClick: () -> Unit,
     onProductClick: (Product) -> Unit,
     onFavoriteClick: (Product) -> Unit,
-    onAllClick: () -> Unit = {}          // для перехода на Home по All
+    onAllClick: () -> Unit = {}
 ) {
-    // список категорий сверху (как на Home)
+    // Чипсы сверху
     val categories = listOf(
         Category("All", isSelected = false),
         Category("Outdoor", isSelected = false),
         Category("Tennis", isSelected = false),
-        Category("Running", isSelected = false),
+        Category("Running", isSelected = false)
     )
 
+    // Текущая выбранная категория на экране
     var selectedCategory by remember { mutableStateOf(categoryName) }
 
-    // 16 одинаковых товаров для примера
-    val categoryProducts = List(16) { index ->
-        Product(
-            id = (index + 1).toString(),
-            name = "Nike Air Max",
-            price = "P752.00",
-            originalPrice = "P850.00",
-            category = "BEST SELLER",
-            imageUrl = "",
-            imageResId = R.drawable.nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
-        )
+    // Функция, которая по выбранной категории даёт нужный drawable
+    fun imageResFor(category: String): Int {
+        return when (category) {
+            "Tennis" -> R.drawable.tennis        // твой ресурс для тенниса
+            "Running" -> R.drawable.running      // твой ресурс для раннинга
+            else -> R.drawable
+                .nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
+        }
+    }
+
+    // Список продуктов пересчитывается при смене selectedCategory
+    val categoryProducts = remember(selectedCategory) {
+        val resId = imageResFor(selectedCategory)
+        List(16) { index ->
+            Product(
+                id = (index + 1).toString(),
+                name = "$selectedCategory Shoe ${(index + 1)}",
+                price = "P752.00",
+                originalPrice = "P850.00",
+                category = "BEST SELLER",
+                imageUrl = "",
+                imageResId = resId
+            )
+        }
     }
 
     Scaffold(
@@ -61,7 +75,7 @@ fun CategoryScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = categoryName,
+                        text = selectedCategory, // показываем текущую категорию
                         style = AppTypography.headingRegular32.copy(
                             fontSize = 24.sp,
                             fontWeight = FontWeight.SemiBold
@@ -90,22 +104,22 @@ fun CategoryScreen(
                 .fillMaxSize()
                 .background(Color(0xFFF7F7F9))
         ) {
-            // Блок категорий (чипсы)
+            // Чипсы категорий
             CategoryChipsRow(
                 categories = categories,
                 selectedCategory = selectedCategory,
                 onCategorySelected = { name ->
-                    selectedCategory = name
                     if (name == "All") {
-                        onAllClick()       // возвращаемся на Home
+                        onAllClick()         // возвращаемся на Home
+                    } else {
+                        selectedCategory = name
                     }
-                    // если нужно — можно потом менять список товаров по категории
                 }
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Сетка из 16 карточек. LazyVerticalGrid уже скроллится по вертикали.
+            // Сетка товаров, скроллится сама
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 modifier = Modifier

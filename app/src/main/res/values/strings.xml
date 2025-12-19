@@ -72,4 +72,8 @@
     <string name="create">Create Account</string>
     <string name="cancel">Cancel</string>
     <string name="verify">Verify Email</string>
+    <string name="save_changes">Save changes</string>
+    <string name="error">Error</string>
+    <string name="ok">OK</string>
+
 </resources>

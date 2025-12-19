@@ -75,16 +75,14 @@ fun NavigationApp(navController: NavHostController) {
         // HOME
         composable("home") {
             HomeScreen(
-                onProductClick = { product ->
-                    // navController.navigate("details/${product.id}")
-                },
-                onCartClick = { /* TODO */ },
-                onSearchClick = { /* TODO */ },
-                onSettingsClick = {
-                    navController.navigate("profile")
-                },
+                onProductClick = { /* ... */ },
+                onCartClick = { /* ... */ },
+                onSearchClick = { /* ... */ },
+                onSettingsClick = { navController.navigate("profile") },
                 onCategoryClick = { categoryName ->
-                    if (categoryName != "All") {
+                    if (categoryName == "All") {
+                        // если вдруг вызовем с All из Home — просто остаёмся на Home
+                    } else {
                         navController.navigate("category/$categoryName")
                     }
                 }
@@ -100,11 +98,12 @@ fun NavigationApp(navController: NavHostController) {
                 onProductClick = { /* TODO */ },
                 onFavoriteClick = { /* TODO */ },
                 onAllClick = {
-                    // возвращаемся на home, очищая стек категории
+                    // возвращаемся на home при выборе All
                     navController.popBackStack(route = "home", inclusive = false)
                 }
             )
         }
+
 
 
         // PROFILE
