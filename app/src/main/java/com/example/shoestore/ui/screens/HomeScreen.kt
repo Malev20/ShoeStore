@@ -40,9 +40,11 @@ fun HomeScreen(
     onProductClick: (Product) -> Unit,
     onCartClick: () -> Unit,
     onSearchClick: () -> Unit,
+    // onSettingsClick больше не нужен для навигации, но оставлен для совместимости
     onSettingsClick: () -> Unit = {},
     onCategoryClick: (String) -> Unit = {}
 ) {
+    // 0 = Home, 1 = Favourite, 2 = Notifications, 3 = Profile
     var selected by rememberSaveable { mutableIntStateOf(0) }
     var selectedCategory by remember { mutableStateOf("All") }
 
@@ -62,7 +64,8 @@ fun HomeScreen(
             originalPrice = "P850.00",
             category = "BEST SELLER",
             imageUrl = "",
-            imageResId = R.drawable.nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
+            imageResId = R.drawable
+                .nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
         ),
         Product(
             id = "2",
@@ -71,7 +74,8 @@ fun HomeScreen(
             originalPrice = "P900.00",
             category = "BEST SELLER",
             imageUrl = "",
-            imageResId = R.drawable.nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
+            imageResId = R.drawable
+                .nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
         ),
         Product(
             id = "3",
@@ -80,7 +84,8 @@ fun HomeScreen(
             originalPrice = "P750.00",
             category = "NEW",
             imageUrl = "",
-            imageResId = R.drawable.nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
+            imageResId = R.drawable
+                .nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
         ),
         Product(
             id = "4",
@@ -89,7 +94,8 @@ fun HomeScreen(
             originalPrice = "P600.00",
             category = "TRENDING",
             imageUrl = "",
-            imageResId = R.drawable.nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
+            imageResId = R.drawable
+                .nike_zoom_winflo_3_831561_001_mens_running_shoes_11550187236tiyyje6l87_prev_ui_3
         )
     )
 
@@ -186,6 +192,7 @@ fun HomeScreen(
                 .fillMaxSize()
                 .background(Color(0xFFF7F7F9))
         ) {
+            // Верхняя панель с поиском и sliders – только на главной
             if (selected == 0) {
                 Column(
                     modifier = Modifier
@@ -242,12 +249,13 @@ fun HomeScreen(
 
                         Spacer(modifier = Modifier.width(12.dp))
 
+                        // SLIDERS: открываем профиль, но остаёмся внутри Home (меню не пропадает)
                         Box(
                             modifier = Modifier
                                 .size(48.dp)
                                 .clip(CircleShape)
                                 .background(MaterialTheme.colorScheme.primary)
-                                .clickable { onSettingsClick() },
+                                .clickable { selected = 3 },
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
@@ -325,6 +333,7 @@ fun HomeScreen(
                     }
 
                     3 -> {
+                        // Профиль с тем же меню снизу
                         ProfileScreen()
                     }
                 }
@@ -494,7 +503,6 @@ fun HomeScreenPreview() {
         onProductClick = {},
         onCartClick = {},
         onSearchClick = {},
-        onSettingsClick = {},
         onCategoryClick = {}
     )
 }

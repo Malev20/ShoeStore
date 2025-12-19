@@ -73,21 +73,21 @@ fun NavigationApp(navController: NavHostController) {
         }
 
         // HOME
+        // HOME
         composable("home") {
             HomeScreen(
                 onProductClick = { /* ... */ },
                 onCartClick = { /* ... */ },
                 onSearchClick = { /* ... */ },
-                onSettingsClick = { navController.navigate("profile") },
+                onSettingsClick = { /* больше НЕ navigate("profile") */ },
                 onCategoryClick = { categoryName ->
-                    if (categoryName == "All") {
-                        // если вдруг вызовем с All из Home — просто остаёмся на Home
-                    } else {
+                    if (categoryName != "All") {
                         navController.navigate("category/$categoryName")
                     }
                 }
             )
         }
+
 
         composable("category/{categoryName}") { backStackEntry ->
             val categoryName = backStackEntry.arguments?.getString("categoryName") ?: "Category"

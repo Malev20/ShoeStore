@@ -45,7 +45,7 @@
     <string name="checkout">Checkout</string>
     <string name="contact_information">Contact Information</string>
     <string name="address">Address</string>
-    <string name="phone_number">phone number</string>
+    <string name="phone_number">Phone number</string>
     <string name="payment_method">Payment Method</string>
     <string name="min_ago">min ago</string>
     <string name="open">OPEN</string>
