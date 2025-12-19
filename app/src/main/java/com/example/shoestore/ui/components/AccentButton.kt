@@ -17,8 +17,8 @@ import com.example.shoestore.R
 fun AccentButton(modifier: Modifier = Modifier, text: String) {
     Button(onClick = {}, shape = RoundedCornerShape(14.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = colorResource(R.color.Accent),
-            contentColor = colorResource(R.color.Background))) {
+            containerColor = colorResource(R.color.accent),
+            contentColor = colorResource(R.color.background))) {
         Text(text = text, fontSize = 14.sp)
     }
 }

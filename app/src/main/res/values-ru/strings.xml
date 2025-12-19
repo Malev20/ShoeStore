@@ -1,78 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="welk">Добро пожаловать</string>
-    <string name="two">Начнем путешествие</string>
-    <string name="three">Умная, великолепная и модная коллекция изучите сейчас</string>
-    <string name="fore">У вас есть сила, чтобы</string>
-    <string name="five">В вашей комнате много красивых и привлекательных растений</string>
-    <string name="six">Привет!</string>
-    <string name="seven">Заполните свои данные</string>
-    <string name="nine">Email</string>
-    <string name="ten">Пароль</string>
-
-    <string name="eleven">Начать</string>
-    <string name="twelve">Далее</string>
-    <string name="thirteen">Регистрация</string>
-    <string name="fourteen">Ваше имя</string>
-    <string name="fifteen">Даю согласие на обработку персональных данных</string>
-    <string name="sixteen">Зарегистрироваться</string>
-    <string name="seventeen">Войти</string>
-    <string name="eighteen">Вы впервые? Создать пользователя</string>
-    <string name="nineteen">Есть аккаунт? Войти</string>
-    <string name="twenty">Воcстановить</string>
-
-    <string name="twentyone">Забыл пароль</string>
-    <string name="twentytwo">Введите свою учетную запись для сброса</string>
-    <string name="twentythree">Отправить</string>
-    <string name="twentyfour">Проверьте Ваш Email</string>
-    <string name="twentyfive">Мы отправили код восстановления пароля на вашу электронную почту.</string>
-    <string name="twentysix">OTP проверка</string>
-    <string name="twentyseven">Пожалуйста, проверьте свою электронную почту, чтобы увидеть код подтверждения</string>
-    <string name="twentyeight">OTP Код</string>
-    <string name="twentynine">Задать новый пароль</string>
-    <string name="thirty">Установите новый пароль для входа в вашу учетную запись</string>
-
-    <string name="thirtyone">подтверждение пароля</string>
-    <string name="thirtytwo">Главная</string>
-    <string name="thirtythree">Поиск</string>
-    <string name="thirtyfour">Категории</string>
-    <string name="thirtyfive">Популярное</string>
-    <string name="thirtysix">Все</string>
-    <string name="thirtyseven">Акции</string>
-    <string name="thirtyeight">Избранное</string>
-    <string name="thirtynine">Корзина</string>
-    <string name="forty">товара</string>
-
-    <string name="fortyone">Сумма</string>
-    <string name="fortytwo">Доставка</string>
-    <string name="fortythree">Итого</string>
-    <string name="fortyfour">Оформить заказ</string>
-    <string name="fortyfive">Контактная информация</string>
-    <string name="fortysix">Адрес</string>
-    <string name="fortyseven">Телефон</string>
-    <string name="fortyeight">Способ оплаты</string>
-    <string name="fortynine">Мин назад</string>
-    <string name="fifty">Открыть</string>
-
-    <string name="fiftyone">Посмотреть на карте</string>
-    <string name="fiftytwo">Недавний</string>
-    <string name="fiftythree">Вчера</string>
-    <string name="fiftyfour">Подробнее</string>
-    <string name="fiftyfive">Добавлено</string>
-    <string name="fiftysix">В корзину</string>
-    <string name="fiftyseven">Вы успешно оформили заказ</string>
-    <string name="fiftyeight">Вернуться к покупкам</string>
-    <string name="fiftynine">Заказы</string>
-    <string name="sixty">Уведомления</string>
-
-    <string name="sixtyone">Настройки</string>
-    <string name="sixtytwo">Выйти</string>
-    <string name="sixtythree">Профиль</string>
-    <string name="sixtyfour">Изменить фото профиля</string>
-    <string name="sixtyfive">Имя</string>
-    <string name="sixtysix">Фамилия</string>
-    <string name="sixtyseven">Сохранить</string>
-    <string name="sixtyeight">Подтвердить</string>
-    <string name="sixtynine">Карта</string>
-    <string name="seventy">Карта лояльности</string>
+    <string name="app_name">ShoeStore</string>
+    <string name="welcome">Добро пожаловать</string>
+    <string name="journey">Начнем путешествие</string>
+    <string name="smart">Умная, великолепная и модная коллекция Изучите сейчас</string>
+    <string name="power">У вас есть сила, чтобы</string>
+    <string name="beatiful">В вашей комнате много красивых и привлекательных растений</string>
+    <string name="hello">Привет!</string>
+    <string name="details">Заполните Свои данные</string>
+    <string name="email">Email</string>
+    <string name="pass">Пароль</string>
+    <string name="start">Начать</string>
+    <string name="next">Далее</string>
+    <string name="register">Регистрация</string>
+    <string name="name">Ваше имя</string>
+    <string name="agree">Даю согласие на обработку\n персональных данных</string>
+    <string name="sign_up">Зарегистрироваться</string>
+    <string name="sign_in"> Войти</string>
+    <string name="new_user">Вы впервые?</string>
+    <string name="have_acc">Есть аккаунт? Войти</string>
+    <string name="recovery">Воcстановить</string>
+    <string name="forgot_password">Забыл пароль</string>
+    <string name="enter_email_to_reset">Введите свою учетную запись для сброса</string>
+    <string name="send">Отправить</string>
+    <string name="check_your_email">Проверьте Ваш Email</string>
+    <string name="recovery_code_sent">Мы отправили код восстановления пароля на вашу электронную почту.</string>
+    <string name="otp_verification">OTP проверка</string>
+    <string name="check_email_for_code">Пожалуйста, проверьте свою электронную почту, чтобы увидеть код подтверждения</string>
+    <string name="otp_code">OTP Код</string>
+    <string name="set_new_password">задать новый пароль</string>
+    <string name="set_password_description">установите новый пароль для входа в вашу учетную запись</string>
+    <string name="confirm_password">подтверждение пароля</string>
+    <string name="home">Главная</string>
+    <string name="search">Поиск</string>
+    <string name="categories">Категории</string>
+    <string name="popular">Популярное</string>
+    <string name="all">Все</string>
+    <string name="sales">Акции</string>
+    <string name="favourite">Избранное</string>
+    <string name="cart">Корзина</string>
+    <string name="items">товара</string>
+    <string name="subtotal">Сумма</string>
+    <string name="delivery">Доставка</string>
+    <string name="total_cost">Итого</string>
+    <string name="checkout">Оформить заказ</string>
+    <string name="contact_information">Контактная информация</string>
+    <string name="address">Адрес</string>
+    <string name="phone_number">телефон</string>
+    <string name="payment_method">Способ оплаты</string>
+    <string name="min_ago">мин назад</string>
+    <string name="open">Открыть</string>
+    <string name="view_map">Посмотреть на карте</string>
+    <string name="recent">Недавний</string>
+    <string name="yesterday">Вчера</string>
+    <string name="more_details">Подробнее</string>
+    <string name="added_to_cart">Добавлено</string>
+    <string name="add_to_cart">В корзину</string>
+    <string name="payment_successful">Вы успешно оформили заказ</string>
+    <string name="back_to_shopping">Вернуться к покупкам</string>
+    <string name="orders">Заказы</string>
+    <string name="notifications">Уведомления</string>
+    <string name="settings">Настройки</string>
+    <string name="sign_out">Выйти</string>
+    <string name="profile">профиль</string>
+    <string name="change_profile_picture">Изменить фото профиля</string>
+    <string name="your_name">Имя</string>
+    <string name="last_name">Фамилия</string>
+    <string name="save_now">Сохранить</string>
+    <string name="confirm">подтвердить</string>
+    <string name="map">карта</string>
+    <string name="loyalty_card">карта лояльности</string>
+    <string name="create">Создать пользователя</string>
+    <string name="cancel">Отмена</string>
+    <string name="verify">Подтвердить Email</string>
 </resources>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

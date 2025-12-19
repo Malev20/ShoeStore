@@ -1,4 +1,4 @@
-package com.example.shoeshop.ui.components
+package com.example.shoestore.ui.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -10,14 +10,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import com.example.shoestore.ui.theme.AppTypography
 
-// DisableButton.kt
 @Composable
 fun DisableButton(
     text: String,
     onClick: () -> Unit,
     enabled: Boolean = true,
     modifier: Modifier = Modifier,
+    textStyle: TextStyle = AppTypography.bodyRegular14
 ) {
     Button(
         onClick = onClick,
@@ -35,6 +36,7 @@ fun DisableButton(
     ) {
         Text(
             text = text,
+            style = textStyle
         )
     }
 }

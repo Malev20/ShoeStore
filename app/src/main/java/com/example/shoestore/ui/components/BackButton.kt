@@ -1,4 +1,4 @@
-package com.example.shoeshop.ui.components
+package com.example.shoestore.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,7 +23,7 @@ import com.example.shoestore.R
 fun BackButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = colorResource(id = R.color.Background)
+    backgroundColor: Color = colorResource(id = R.color.background)
 ) {
     Box(
         modifier = modifier

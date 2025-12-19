@@ -16,7 +16,7 @@ import com.example.shoestore.R
 fun BlockButton(modifier: Modifier = Modifier, text: String) {
     Button(onClick = {}, shape = RoundedCornerShape(14.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = colorResource(R.color.Block),
+            containerColor = colorResource(R.color.block),
             contentColor = colorResource(R.color.black))) {
         Text(text = text, fontSize = 14.sp)
     }
