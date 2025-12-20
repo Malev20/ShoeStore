@@ -11,7 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.shoestore.R
 import com.example.shoestore.data.model.Product
 import com.example.shoestore.ui.components.ProductCard
 import com.example.shoestore.ui.theme.AppTypography
@@ -29,7 +31,7 @@ fun FavoriteScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Избранное",
+                        text = stringResource(id = R.string.favourite),
                         style = AppTypography.headingRegular32
                     )
                 },
@@ -48,7 +50,7 @@ fun FavoriteScreen(
                     .background(Color(0xFFF7F7F9)),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = "Нет избранных товаров")
+                Text(text = "No featured products")
             }
         } else {
             LazyVerticalGrid(
